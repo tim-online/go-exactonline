@@ -1,4 +1,4 @@
-package exact
+package rest
 
 import (
 	"encoding/json"
