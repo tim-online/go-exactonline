@@ -31,6 +31,7 @@ func AddQueryParamsToRequest(requestParams interface{}, req *http.Request, skipE
 	}
 
 	req.URL.RawQuery = query.Encode()
+	req.URL.RawQuery = "$select=EntryID,ClosingBalanceFC,Date,Description,Division,Document,DocumentNumber,DocumentSubject,EntryNumber,ExternalLinkDescription,ExternalLinkReference,FinancialPeriod,FinancialYear,IsExtraDuty,JournalCode,JournalDescription,Modified,OpeningBalanceFC,PaymentConditionCode,PaymentConditionDescription,PaymentReference,Status,StatusDescription"
 	return nil
 }
 

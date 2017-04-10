@@ -153,13 +153,24 @@ func (c *Client) Do(req *http.Request, responseBody interface{}) (*http.Response
 		Results interface{} `json:"results"`
 	}
 
-	type Envelope struct {
+	type EnvelopeWithResults struct {
 		D D `json:"d"`
 	}
 
-	envelope := &Envelope{D: D{Results: responseBody}}
+	type EnvelopeWithoutResults struct {
+		D interface{} `json:"d"`
+	}
+
+	envelopeWithResults := &EnvelopeWithResults{D: D{Results: responseBody}}
+	envelopeWithoutResults := &EnvelopeWithoutResults{D: responseBody}
 
 	// try to decode body into interface parameter
-	err = json.NewDecoder(httpResp.Body).Decode(envelope)
+	err = json.NewDecoder(httpResp.Body).Decode(envelopeWithResults)
+	if err == nil {
+		return httpResp, err
+	}
+
+	// try something else
+	err = json.NewDecoder(httpResp.Body).Decode(envelopeWithoutResults)
 	return httpResp, err
 }
