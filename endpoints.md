@@ -108,7 +108,7 @@
 
 ## Financial/TransactionLines
 
-- [ ] [GET /api/v1/{division}/bulk/Financial/TransactionLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=BulkFinancialTransactionLines)
+- [x] [GET /api/v1/{division}/bulk/Financial/TransactionLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=BulkFinancialTransactionLines)
 
 # Cashflow
 
