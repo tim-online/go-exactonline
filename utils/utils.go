@@ -5,27 +5,44 @@ import (
 	"net/http"
 	"net/url"
 	"reflect"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/aodin/date"
 	"github.com/gorilla/schema"
+	"github.com/tim-online/go-exactonline/odata"
 )
+
+type SchemaMarshaler interface {
+	MarshalSchema() string
+}
 
 func AddQueryParamsToRequest(requestParams interface{}, req *http.Request, skipEmpty bool) error {
 	params := url.Values{}
 	encoder := schema.NewEncoder()
 
-	// register custom int encoder
-	encodeInt := func(v reflect.Value) string {
-		i := int64(v.Int())
-		if i == 0 {
+	// register custom encoders
+	encodeSchemaMarshaler := func(v reflect.Value) string {
+		marshaler, ok := v.Interface().(SchemaMarshaler)
+		if ok == false {
 			return ""
 		}
-		return strconv.FormatInt(i, 10)
+
+		return marshaler.MarshalSchema()
 	}
-	encoder.RegisterEncoder(0, encodeInt)
+
+	// encodeInt := func(v reflect.Value) string {
+	// 	i := int64(v.Int())
+	// 	if i == 0 {
+	// 		return ""
+	// 	}
+	// 	return strconv.FormatInt(i, 10)
+	// }
+
+	encoder.RegisterEncoder(&odata.Expand{}, encodeSchemaMarshaler)
+	encoder.RegisterEncoder(&odata.Filter{}, encodeSchemaMarshaler)
+	encoder.RegisterEncoder(&odata.Select{}, encodeSchemaMarshaler)
+	encoder.RegisterEncoder(&odata.Top{}, encodeSchemaMarshaler)
 
 	err := encoder.Encode(requestParams, params)
 	if err != nil {

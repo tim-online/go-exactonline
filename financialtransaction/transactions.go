@@ -226,19 +226,26 @@ type TransactionLine struct {
 }
 
 func (s *Service) NewTransactionsGetParams() *TransactionsGetParams {
-	return &TransactionsGetParams{}
+	selectFields, _ := utils.Fields(&Transaction{})
+	expandFields := []string{"TransactionLines"}
+	return &TransactionsGetParams{
+		Select: odata.NewSelect(selectFields),
+		Expand: odata.NewExpand(expandFields),
+		Filter: odata.NewFilter(),
+		Top:    odata.NewTop(),
+	}
 }
 
 type TransactionsGetParams struct {
 	// @TODO: check if this an OData struct or something
-	Select odata.Select `schema:"$select,omitempty"`
-	Expand odata.Expand `schema:"$expand,omitempty"`
-	Filter odata.Filter `schema:"$filter,omitempty"`
-	Top    int          `schema:"$top,omitempty"`
+	Select *odata.Select `schema:"$select,omitempty"`
+	Expand *odata.Expand `schema:"$expand,omitempty"`
+	Filter *odata.Filter `schema:"$filter,omitempty"`
+	Top    *odata.Top    `schema:"$top,omitempty"`
 }
 
-type TransactionStatus int
-type TransactionType int
+type TransactionStatus edm.Int16
+type TransactionType edm.Int32
 
 func (t *TransactionType) String() string {
 	switch int(*t) {
