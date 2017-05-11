@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
+	"reflect"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/aodin/date"
@@ -13,6 +16,17 @@ import (
 func AddQueryParamsToRequest(requestParams interface{}, req *http.Request, skipEmpty bool) error {
 	params := url.Values{}
 	encoder := schema.NewEncoder()
+
+	// register custom int encoder
+	encodeInt := func(v reflect.Value) string {
+		i := int64(v.Int())
+		if i == 0 {
+			return ""
+		}
+		return strconv.FormatInt(i, 10)
+	}
+	encoder.RegisterEncoder(0, encodeInt)
+
 	err := encoder.Encode(requestParams, params)
 	if err != nil {
 		return err
@@ -31,7 +45,7 @@ func AddQueryParamsToRequest(requestParams interface{}, req *http.Request, skipE
 	}
 
 	req.URL.RawQuery = query.Encode()
-	req.URL.RawQuery = "$select=EntryID,ClosingBalanceFC,Date,Description,Division,Document,DocumentNumber,DocumentSubject,EntryNumber,ExternalLinkDescription,ExternalLinkReference,FinancialPeriod,FinancialYear,IsExtraDuty,JournalCode,JournalDescription,Modified,OpeningBalanceFC,PaymentConditionCode,PaymentConditionDescription,PaymentReference,Status,StatusDescription"
+	req.URL.RawQuery = strings.Replace(req.URL.RawQuery, "%24", "$", -1)
 	return nil
 }
 

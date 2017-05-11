@@ -9,7 +9,10 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"reflect"
 	"strings"
+
+	"github.com/tim-online/go-exactonline/utils"
 )
 
 const (
@@ -141,36 +144,61 @@ func (c *Client) Do(req *http.Request, responseBody interface{}) (*http.Response
 	// 	return httpResp, err
 	// }
 
+	// $top=1
 	// {
 	// 	"d" : {
 	// 		"results" : [
-	// 		{}
+	// 			{}
 	// 		]
 	// 	}
 	// }
 
-	type D struct {
-		Results interface{} `json:"results"`
+	// $top=2
+	// {
+	// 	"d" : [
+	// 		{}
+	// 	]
+	// }
+
+	// no $top
+	// {
+	// 	"d" : {
+	// 		"results": [
+	// 			{}
+	// 		]
+	// 	}
+	// }
+
+	type Envelope struct {
+		D utils.JsonTester `json:"d"`
 	}
 
-	type EnvelopeWithResults struct {
-		D D `json:"d"`
-	}
-
-	type EnvelopeWithoutResults struct {
-		D interface{} `json:"d"`
-	}
-
-	envelopeWithResults := &EnvelopeWithResults{D: D{Results: responseBody}}
-	envelopeWithoutResults := &EnvelopeWithoutResults{D: responseBody}
-
-	// try to decode body into interface parameter
-	err = json.NewDecoder(httpResp.Body).Decode(envelopeWithResults)
-	if err == nil {
+	envelope := &Envelope{}
+	err = json.NewDecoder(httpResp.Body).Decode(envelope)
+	if err != nil {
 		return httpResp, err
 	}
 
-	// try something else
-	err = json.NewDecoder(httpResp.Body).Decode(envelopeWithoutResults)
+	// get bytes
+	b := []byte(envelope.D.RawMessage)
+
+	// check if interface has ".Results" field
+	r := reflect.ValueOf(responseBody)
+	configField := reflect.Indirect(r).FieldByName("Results")
+	hasResults := configField.IsValid()
+
+	// check if json is an object
+	isArray := envelope.D.IsArray()
+
+	// conversie doen
+	if hasResults && isArray {
+		b = append([]byte(`{"results":`), b...)
+		b = append(b, []byte("}")...)
+
+		err = json.Unmarshal(b, responseBody)
+		return httpResp, err
+	}
+
+	err = json.Unmarshal(b, responseBody)
 	return httpResp, err
 }
