@@ -9,16 +9,16 @@ import (
 )
 
 const (
-	TransactionsEndpoint = "/v1/%d/financialtransaction/Transactions"
+	BankEntriesEndpoint = "/v1/%d/financialtransaction/BankEntries"
 )
 
-// Transactions endpoint
-// - https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionTransactions
+// BankEntries endpoint
+// - https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionBankEntries
 
-func (s *Service) TransactionsGet(divisionID int, requestParams *TransactionsGetParams, ctx context.Context) (*TransactionsGetResponse, error) {
+func (s *Service) BankEntriesGet(divisionID int, requestParams *BankEntriesGetParams, ctx context.Context) (*BankEntriesGetResponse, error) {
 	method := "GET"
-	responseBody := s.NewTransactionsGetResponse()
-	path := fmt.Sprintf(TransactionsEndpoint, divisionID)
+	responseBody := s.NewBankEntriesGetResponse()
+	path := fmt.Sprintf(BankEntriesEndpoint, divisionID)
 
 	// create a new HTTP request
 	httpReq, err := s.rest.NewRequest(ctx, method, path, nil)
@@ -34,18 +34,18 @@ func (s *Service) TransactionsGet(divisionID int, requestParams *TransactionsGet
 	return responseBody, err
 }
 
-func (s *Service) NewTransactionsGetResponse() *TransactionsGetResponse {
-	return &TransactionsGetResponse{}
+func (s *Service) NewBankEntriesGetResponse() *BankEntriesGetResponse {
+	return &BankEntriesGetResponse{}
 }
 
-type TransactionsGetResponse struct {
-	Results Transactions `json:"results"`
+type BankEntriesGetResponse struct {
+	Results BankEntries `json:"results"`
 }
 
-func (s *Service) NewTransactionsGetParams() *TransactionsGetParams {
-	selectFields, _ := utils.Fields(&Transaction{})
-	expandFields := []string{"TransactionLines"}
-	return &TransactionsGetParams{
+func (s *Service) NewBankEntriesGetParams() *BankEntriesGetParams {
+	selectFields, _ := utils.Fields(&BankEntry{})
+	expandFields := []string{"BankEntryLines"}
+	return &BankEntriesGetParams{
 		Select: odata.NewSelect(selectFields),
 		Expand: odata.NewExpand(expandFields),
 		Filter: odata.NewFilter(),
@@ -53,7 +53,7 @@ func (s *Service) NewTransactionsGetParams() *TransactionsGetParams {
 	}
 }
 
-type TransactionsGetParams struct {
+type BankEntriesGetParams struct {
 	// @TODO: check if this an OData struct or something
 	Select *odata.Select `schema:"$select,omitempty"`
 	Expand *odata.Expand `schema:"$expand,omitempty"`

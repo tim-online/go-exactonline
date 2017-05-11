@@ -1,6 +1,8 @@
 package financialtransaction
 
 import (
+	"encoding/json"
+
 	"github.com/tim-online/go-exactonline/edm"
 	"github.com/tim-online/go-exactonline/rest"
 )
@@ -46,6 +48,23 @@ type Transaction struct {
 }
 
 type TransactionLines []TransactionLine
+
+func (t *TransactionLines) UnmarshalJSON(data []byte) (err error) {
+	type Results TransactionLines
+
+	type Envelope struct {
+		Results Results `json:"results"`
+	}
+
+	envelope := &Envelope{Results: Results(*t)}
+	err = json.Unmarshal(data, envelope)
+	if err != nil {
+		return err
+	}
+
+	*t = TransactionLines(envelope.Results)
+	return nil
+}
 
 type TransactionLine struct {
 	ID                        edm.GUID     `json:"ID"`
@@ -118,7 +137,72 @@ type TransactionLine struct {
 	YourRef                   edm.String   `json:"YourRef"`
 }
 
+const (
+	StatusRejected  TransactionStatus = 5
+	StatusOpen      TransactionStatus = 20
+	StatusProcessed TransactionStatus = 50
+)
+
 type TransactionStatus edm.Int16
+
+const (
+	TypeOpeningBalance              TransactionType = 10
+	TypeSalesEntry                  TransactionType = 20
+	TypeSalesCreditNote             TransactionType = 21
+	TypePurchaseEntry               TransactionType = 30
+	TypePurchaseCreditNote          TransactionType = 31
+	TypeCashFlow                    TransactionType = 40
+	TypeVatReturn                   TransactionType = 50
+	TypeAssetDepreciation           TransactionType = 70
+	TypeAssetInvestment             TransactionType = 71
+	TypeAssetRevaluation            TransactionType = 72
+	TypeAssetTransfer               TransactionType = 73
+	TypeAssetSplit                  TransactionType = 74
+	TypeAssetDiscontinue            TransactionType = 75
+	TypeAssetSales                  TransactionType = 76
+	TypeRevaluation                 TransactionType = 80
+	TypeExchangeRateDifference      TransactionType = 82
+	TypePaymentDifference           TransactionType = 83
+	TypeDeferredRevenue             TransactionType = 84
+	TypeTrackingNumberRevaluation   TransactionType = 85
+	TypeDeferredCost                TransactionType = 86
+	TypeVatOnPrepayment             TransactionType = 87
+	TypeOther                       TransactionType = 90
+	TypeDelivery                    TransactionType = 120
+	TypeSalesReturn                 TransactionType = 121
+	TypeReceipt                     TransactionType = 130
+	TypePurchaseReturn              TransactionType = 131
+	TypeShopOrderStockReceipt       TransactionType = 140
+	TypeShopOrderStockReversal      TransactionType = 141
+	TypeIssueToParent               TransactionType = 142
+	TypeShopOrderTimeEntry          TransactionType = 145
+	TypeShopOrderTimeEntryReversal  TransactionType = 146
+	TypeShopOrderByProductReceipt   TransactionType = 147
+	TypeShopOrderByProductReversal  TransactionType = 148
+	TypeRequirementIssue            TransactionType = 150
+	TypeRequirementReversal         TransactionType = 151
+	TypeReturnedFromParent          TransactionType = 152
+	TypeSubcontractIssue            TransactionType = 155
+	TypeSubcontractReversal         TransactionType = 156
+	TypeShopOrderCompleted          TransactionType = 158
+	TypeFinishAssembly              TransactionType = 162
+	TypePayroll                     TransactionType = 170
+	TypeStockRevaluation            TransactionType = 180
+	TypeFinancialRevaluation        TransactionType = 181
+	TypeStockCount                  TransactionType = 195
+	TypeCorrectionEntry             TransactionType = 290
+	TypePeriodClosing               TransactionType = 310
+	TypeYearEndReflection           TransactionType = 320
+	TypeYearEndCosting              TransactionType = 321
+	TypeYearEndProfitsToGrossProfit TransactionType = 322
+	TypeYearEndCostsToGrossProfit   TransactionType = 323
+	TypeYearEndTax                  TransactionType = 324
+	TypeYearEndGrossProfitToNetPL   TransactionType = 325
+	TypeYearEndNetPLToBalanceSheet  TransactionType = 326
+	TypeYearEndClosingBalance       TransactionType = 327
+	TypeYearStartOpeningBalance     TransactionType = 328
+	TypeBudget                      TransactionType = 3000
+)
 
 type TransactionType edm.Int32
 
@@ -238,4 +322,96 @@ func (t *TransactionType) String() string {
 		return "Budget"
 	}
 	return ""
+}
+
+type BankEntries []BankEntry
+
+type BankEntry struct {
+	EntryID                      edm.GUID       `json:"EntryID"`
+	BankEntryLines               BankEntryLines `json:"BankEntryLines"`
+	BankStatementDocument        edm.GUID       `json:"BankStatementDocument"`
+	BankStatementDocumentNumber  edm.Int32      `json:"BankStatementDocumentNumber"`
+	BankStatementDocumentSubject edm.String     `json:"BankStatementDocumentSubject"`
+	ClosingBalanceFC             edm.Double     `json:"ClosingBalanceFC"`
+	Created                      edm.DateTime   `json:"Created"`
+	Currency                     edm.String     `json:"Currency"`
+	Division                     edm.Int32      `json:"Division"`
+	EntryNumber                  edm.Int32      `json:"EntryNumber"`
+	FinancialPeriod              edm.Int16      `json:"FinancialPeriod"`
+	FinancialYear                edm.Int16      `json:"FinancialYear"`
+	JournalCode                  edm.String     `json:"JournalCode"`
+	JournalDescription           edm.String     `json:"JournalDescription"`
+	Modified                     edm.DateTime   `json:"Modified"`
+	OpeningBalanceFC             edm.Double     `json:"OpeningBalanceFC"`
+	Status                       edm.Int16      `json:"Status"`
+	StatusDescription            edm.String     `json:"StatusDescription"`
+}
+
+type BankEntryLines []BankEntryLine
+
+// work around:
+// "BankEntryLines": {"__deferred": {}}
+// "BankEntryLines": {"results": []}
+func (b *BankEntryLines) UnmarshalJSON(data []byte) (err error) {
+	type Results BankEntryLines
+
+	type Envelope struct {
+		Results Results `json:"results"`
+	}
+
+	envelope := &Envelope{Results: Results(*b)}
+	err = json.Unmarshal(data, envelope)
+	if err != nil {
+		return err
+	}
+
+	*b = BankEntryLines(envelope.Results)
+	return nil
+}
+
+type BankEntryLine struct {
+	ID                    edm.GUID     `json:"ID"`
+	Account               edm.GUID     `json:"Account"`
+	AccountCode           edm.String   `json:"AccountCode"`
+	AccountName           edm.String   `json:"AccountName"`
+	AmountDC              edm.Double   `json:"AmountDC"`
+	AmountFC              edm.Double   `json:"AmountFC"`
+	AmountVATFC           edm.Double   `json:"AmountVATFC"`
+	Asset                 edm.GUID     `json:"Asset"`
+	AssetCode             edm.String   `json:"AssetCode"`
+	AssetDescription      edm.String   `json:"AssetDescription"`
+	CostCenter            edm.String   `json:"CostCenter"`
+	CostCenterDescription edm.String   `json:"CostCenterDescription"`
+	CostUnit              edm.String   `json:"CostUnit"`
+	CostUnitDescription   edm.String   `json:"CostUnitDescription"`
+	Created               edm.DateTime `json:"Created"`
+	Creator               edm.GUID     `json:"Creator"`
+	CreatorFullName       edm.String   `json:"CreatorFullName"`
+	Date                  edm.DateTime `json:"Date"`
+	Description           edm.String   `json:"Description"`
+	Division              edm.Int32    `json:"Division"`
+	Document              edm.GUID     `json:"Document"`
+	DocumentNumber        edm.Int32    `json:"DocumentNumber"`
+	DocumentSubject       edm.String   `json:"DocumentSubject"`
+	EntryID               edm.GUID     `json:"EntryID"`
+	EntryNumber           edm.Int32    `json:"EntryNumber"`
+	ExchangeRate          edm.Double   `json:"ExchangeRate"`
+	GLAccount             edm.GUID     `json:"GLAccount"`
+	GLAccountCode         edm.String   `json:"GLAccountCode"`
+	GLAccountDescription  edm.String   `json:"GLAccountDescription"`
+	LineNumber            edm.Int32    `json:"LineNumber"`
+	Modified              edm.DateTime `json:"Modified"`
+	Modifier              edm.GUID     `json:"Modifier"`
+	ModifierFullName      edm.String   `json:"ModifierFullName"`
+	Notes                 edm.String   `json:"Notes"`
+	OffsetID              edm.GUID     `json:"OffsetID"`
+	OurRef                edm.Int32    `json:"OurRef"`
+	Project               edm.GUID     `json:"Project"`
+	ProjectCode           edm.String   `json:"ProjectCode"`
+	ProjectDescription    edm.String   `json:"ProjectDescription"`
+	Quantity              edm.Double   `json:"Quantity"`
+	VATCode               edm.String   `json:"VATCode"`
+	VATCodeDescription    edm.String   `json:"VATCodeDescription"`
+	VATPercentage         edm.Double   `json:"VATPercentage"`
+	VATType               edm.String   `json:"VATType"`
 }
