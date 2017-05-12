@@ -421,7 +421,7 @@
 
 ## Journals
 
-- [ ] [GET /api/v1/{division}/financial/Journals](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialJournals)
+- [x] [GET /api/v1/{division}/financial/Journals](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialJournals)
 - [ ] [POST /api/v1/{division}/financial/Journals](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialJournals)
 - [ ] [PUT /api/v1/{division}/financial/Journals](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialJournals)
 - [ ] [DELETE /api/v1/{division}/financial/Journals](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialJournals)
