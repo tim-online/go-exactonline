@@ -5,6 +5,7 @@ import (
 
 	"github.com/tim-online/go-exactonline/edm"
 	"github.com/tim-online/go-exactonline/rest"
+	"github.com/tim-online/go-exactonline/utils"
 )
 
 func NewService(rest *rest.Client) *Service {
@@ -49,18 +50,37 @@ type Transaction struct {
 
 type TransactionLines []TransactionLine
 
+// standalone: "TransactionLines": []
+// deferred: "TransactionLines": {"__deferred": {}}
+// embedded: "TransactionLines": {"results": []}
 func (t *TransactionLines) UnmarshalJSON(data []byte) (err error) {
 	type Results TransactionLines
 
 	type Envelope struct {
-		Results Results `json:"results"`
+		Results  Results         `json:"results"`
+		Deferred json.RawMessage `json:"__deferred"`
 	}
 
-	envelope := &Envelope{Results: Results(*t)}
-	err = json.Unmarshal(data, envelope)
+	// create the json tester
+	tester := &utils.JsonTester{}
+	json.Unmarshal(data, tester)
 	if err != nil {
 		return err
 	}
+
+	// test if json is array (standalone)
+	if tester.IsArray() {
+		results := &Results{}
+		err = json.Unmarshal(data, results)
+		if err != nil {
+			return err
+		}
+
+		*t = TransactionLines(*results)
+		return nil
+	}
+
+	envelope := &Envelope{Results: Results(*t)}
 
 	*t = TransactionLines(envelope.Results)
 	return nil
@@ -349,21 +369,36 @@ type BankEntry struct {
 
 type BankEntryLines []BankEntryLine
 
-// work around:
-// "BankEntryLines": {"__deferred": {}}
-// "BankEntryLines": {"results": []}
+// standalone: "BankEntryLines": []
+// deferred: "BankEntryLines": {"__deferred": {}}
+// embedded: "BankEntryLines": {"results": []}
 func (b *BankEntryLines) UnmarshalJSON(data []byte) (err error) {
 	type Results BankEntryLines
 
 	type Envelope struct {
-		Results Results `json:"results"`
+		Results  Results         `json:"results"`
+		Deferred json.RawMessage `json:"__deferred"`
 	}
 
-	envelope := &Envelope{Results: Results(*b)}
-	err = json.Unmarshal(data, envelope)
+	tester := &utils.JsonTester{}
+	json.Unmarshal(data, tester)
 	if err != nil {
 		return err
 	}
+
+	// test if json is array (standalone)
+	if tester.IsArray() {
+		results := &Results{}
+		err = json.Unmarshal(data, results)
+		if err != nil {
+			return err
+		}
+
+		*b = BankEntryLines(*results)
+		return nil
+	}
+
+	envelope := &Envelope{Results: Results(*b)}
 
 	*b = BankEntryLines(envelope.Results)
 	return nil
