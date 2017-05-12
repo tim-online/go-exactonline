@@ -503,7 +503,7 @@
 
 ## BankEntryLines
 
-- [ ] [GET /api/v1/{division}/financialtransaction/BankEntryLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionBankEntryLines)
+- [x] [GET /api/v1/{division}/financialtransaction/BankEntryLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionBankEntryLines)
 - [ ] [POST /api/v1/{division}/financialtransaction/BankEntryLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionBankEntryLines)
 
 ## CashEntries
