@@ -413,7 +413,7 @@
 
 ## GLSchemes
 
-- [ ] [GET /api/v1/{division}/financial/GLSchemes](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialGLSchemes)
+- [x] [GET /api/v1/{division}/financial/GLSchemes](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialGLSchemes)
 
 ## GLTransactionTypes
 
