@@ -1,49 +1,8 @@
 package financial
 
-import (
-	"encoding/json"
-
-	"github.com/tim-online/go-exactonline/edm"
-	"github.com/tim-online/go-exactonline/utils"
-)
+import "github.com/tim-online/go-exactonline/edm"
 
 type Journals []Journal
-
-// standalone: "TransactionLines": []
-// deferred: "TransactionLines": {"__deferred": {}}
-// embedded: "TransactionLines": {"results": []}
-func (j *Journals) UnmarshalJSON(data []byte) (err error) {
-	type Results Journals
-
-	type Envelope struct {
-		Results  Results         `json:"results"`
-		Deferred json.RawMessage `json:"__deferred"`
-	}
-
-	// create the json tester
-	tester := &utils.JsonTester{}
-	json.Unmarshal(data, tester)
-	if err != nil {
-		return err
-	}
-
-	// test if json is array (standalone)
-	if tester.IsArray() {
-		results := &Results{}
-		err = json.Unmarshal(data, results)
-		if err != nil {
-			return err
-		}
-
-		*j = Journals(*results)
-		return nil
-	}
-
-	envelope := &Envelope{Results: Results(*j)}
-
-	*j = Journals(envelope.Results)
-	return nil
-}
 
 type Journal struct {
 	ID                              edm.GUID     `json:"ID"`

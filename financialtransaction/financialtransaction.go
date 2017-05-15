@@ -81,6 +81,10 @@ func (t *TransactionLines) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	envelope := &Envelope{Results: Results(*t)}
+	err = json.Unmarshal(data, envelope)
+	if err != nil {
+		return err
+	}
 
 	*t = TransactionLines(envelope.Results)
 	return nil
