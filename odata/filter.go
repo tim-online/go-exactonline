@@ -4,9 +4,14 @@ func NewFilter() *Filter {
 	return &Filter{}
 }
 
-type Filter struct{}
+type Filter struct {
+	Query string
+}
+
+func (f *Filter) Set(q string) {
+	f.Query = q
+}
 
 func (f *Filter) MarshalSchema() string {
-	// return strings.Join(t.Values, ",")
-	return ""
+	return f.Query
 }

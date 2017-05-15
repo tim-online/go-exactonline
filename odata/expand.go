@@ -42,6 +42,10 @@ func (e *Expand) IsAllowed(key string) bool {
 	return ok
 }
 
-func (e *Expand) MarshalSchema() string {
+func (e *Expand) Query() string {
 	return strings.Join(e.Values, ",")
+}
+
+func (e *Expand) MarshalSchema() string {
+	return e.Query()
 }

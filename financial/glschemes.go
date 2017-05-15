@@ -44,7 +44,7 @@ type GLSchemesGetResponse struct {
 }
 
 func (s *Service) NewGLSchemesGetParams() *GLSchemesGetParams {
-	selectFields, _ := utils.Fields(&Journal{})
+	selectFields, _ := utils.Fields(&GLScheme{})
 	return &GLSchemesGetParams{
 		Select: odata.NewSelect(selectFields),
 		Filter: odata.NewFilter(),

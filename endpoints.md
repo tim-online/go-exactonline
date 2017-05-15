@@ -402,7 +402,7 @@
 
 ## GLAccounts
 
-- [ ] [GET /api/v1/{division}/financial/GLAccounts](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialGLAccounts)
+- [x] [GET /api/v1/{division}/financial/GLAccounts](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialGLAccounts)
 - [ ] [POST /api/v1/{division}/financial/GLAccounts](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialGLAccounts)
 - [ ] [PUT /api/v1/{division}/financial/GLAccounts](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialGLAccounts)
 - [ ] [DELETE /api/v1/{division}/financial/GLAccounts](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialGLAccounts)

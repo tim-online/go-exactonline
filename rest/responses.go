@@ -38,8 +38,13 @@ func CheckResponse(r *http.Response) error {
 		return errorResponse
 	}
 
+	type Envelope struct {
+		Error *ErrorResponse `json:"error"`
+	}
+
 	// convert json to struct
-	err = json.Unmarshal(data, errorResponse)
+	envelope := &Envelope{Error: errorResponse}
+	err = json.Unmarshal(data, envelope)
 	if err != nil {
 		errorResponse.Message.Value = fmt.Sprintf("Malformed json response")
 		return errorResponse
@@ -66,7 +71,7 @@ type ErrorResponse struct {
 	Code string
 
 	// Fault message
-	Message ErrorMessage `json:"Message"`
+	Message ErrorMessage `json:"message"`
 }
 
 type ErrorMessage struct {
