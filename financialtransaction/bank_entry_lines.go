@@ -2,23 +2,23 @@ package financialtransaction
 
 import (
 	"context"
-	"fmt"
+	"net/http"
 
 	"github.com/tim-online/go-exactonline/odata"
 	"github.com/tim-online/go-exactonline/utils"
 )
 
 const (
-	BankEntryLinesEndpoint = "/v1/%d/financialtransaction/BankEntryLines"
+	BankEntryLinesEndpoint = "/v1/{division}/financialtransaction/BankEntryLines"
 )
 
 // BankEntryLines endpoint
 // - https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionBankEntryLines
 
-func (s *Service) BankEntryLinesGet(divisionID int, requestParams *BankEntryLinesGetParams, ctx context.Context) (*BankEntryLinesGetResponse, error) {
-	method := "GET"
+func (s *Service) BankEntryLinesGet(requestParams *BankEntryLinesGetParams, ctx context.Context) (*BankEntryLinesGetResponse, error) {
+	method := http.MethodGet
 	responseBody := s.NewBankEntryLinesGetResponse()
-	path := fmt.Sprintf(BankEntryLinesEndpoint, divisionID)
+	path := s.rest.SubPath(BankEntryLinesEndpoint)
 
 	// create a new HTTP request
 	httpReq, err := s.rest.NewRequest(ctx, method, path, nil)

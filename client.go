@@ -58,7 +58,7 @@ type Client struct {
 }
 
 // NewClient returns a new Exact Online API client
-func NewClient(httpClient *http.Client, baseURL *url.URL) *Client {
+func NewClient(httpClient *http.Client, baseURL *url.URL, divisionID int) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
@@ -69,6 +69,7 @@ func NewClient(httpClient *http.Client, baseURL *url.URL) *Client {
 
 	// set default options
 	c.SetBaseURL(baseURL)
+	c.SetDivisionID(divisionID)
 	c.SetUserAgent(userAgent)
 	c.SetDebug(false)
 
@@ -87,4 +88,9 @@ func (c *Client) SetDebug(debug bool) {
 func (c *Client) SetBaseURL(baseURL *url.URL) {
 	// set base url for use in http client
 	c.Client.SetBaseURL(baseURL)
+}
+
+func (c *Client) SetDivisionID(divisionID int) {
+	// set base url for use in http client
+	c.Client.SetDivisionID(divisionID)
 }

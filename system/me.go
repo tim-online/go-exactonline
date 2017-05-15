@@ -2,7 +2,7 @@ package system
 
 import (
 	"context"
-	"fmt"
+	"net/http"
 	"net/url"
 
 	"github.com/gorilla/schema"
@@ -18,9 +18,9 @@ const (
 )
 
 func (s *Service) MeGet(requestParams *MeGetParams, ctx context.Context) (*MeGetResponse, error) {
-	method := "GET"
+	method := http.MethodGet
 	responseBody := s.NewMeGetResponse()
-	path := fmt.Sprintf(MeEndpoint)
+	path := s.rest.SubPath(MeEndpoint)
 
 	// create a new HTTP request
 	httpReq, err := s.rest.NewRequest(ctx, method, path, nil)

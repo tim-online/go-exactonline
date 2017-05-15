@@ -9,16 +9,16 @@ import (
 )
 
 const (
-	GLSchemesEndpoint = "/v1/{division}/financial/GLSchemes"
+	GLAccountsEndpoint = "/v1/{division}/financial/GLAccounts"
 )
 
-// GLSchemes endpoint
-// - https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialGLSchemes
+// GLAccounts endpoint
+// - https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialGLAccounts
 
-func (s *Service) GLSchemesGet(requestParams *GLSchemesGetParams, ctx context.Context) (*GLSchemesGetResponse, error) {
+func (s *Service) GLAccountsGet(requestParams *GLAccountsGetParams, ctx context.Context) (*GLAccountsGetResponse, error) {
 	method := http.MethodGet
-	responseBody := s.NewGLSchemesGetResponse()
-	path := s.rest.SubPath(GLSchemesEndpoint)
+	responseBody := s.NewGLAccountsGetResponse()
+	path := s.rest.SubPath(GLAccountsEndpoint)
 
 	// create a new HTTP request
 	httpReq, err := s.rest.NewRequest(ctx, method, path, nil)
@@ -34,24 +34,24 @@ func (s *Service) GLSchemesGet(requestParams *GLSchemesGetParams, ctx context.Co
 	return responseBody, err
 }
 
-func (s *Service) NewGLSchemesGetResponse() *GLSchemesGetResponse {
-	return &GLSchemesGetResponse{}
+func (s *Service) NewGLAccountsGetResponse() *GLAccountsGetResponse {
+	return &GLAccountsGetResponse{}
 }
 
-type GLSchemesGetResponse struct {
-	Results GLSchemes `json:"results"`
+type GLAccountsGetResponse struct {
+	Results GLAccounts `json:"results"`
 }
 
-func (s *Service) NewGLSchemesGetParams() *GLSchemesGetParams {
-	selectFields, _ := utils.Fields(&GLScheme{})
-	return &GLSchemesGetParams{
+func (s *Service) NewGLAccountsGetParams() *GLAccountsGetParams {
+	selectFields, _ := utils.Fields(&GLAccount{})
+	return &GLAccountsGetParams{
 		Select: odata.NewSelect(selectFields),
 		Filter: odata.NewFilter(),
 		Top:    odata.NewTop(),
 	}
 }
 
-type GLSchemesGetParams struct {
+type GLAccountsGetParams struct {
 	// @TODO: check if this an OData struct or something
 	Select *odata.Select `schema:"$select,omitempty"`
 	Filter *odata.Filter `schema:"$filter,omitempty"`

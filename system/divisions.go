@@ -2,7 +2,7 @@ package system
 
 import (
 	"context"
-	"fmt"
+	"net/http"
 	"net/url"
 
 	"github.com/gorilla/schema"
@@ -14,13 +14,13 @@ import (
 // - https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SystemSystemDivisions
 
 const (
-	DivisionsEndpoint = "/v1/%d/system/Divisions"
+	DivisionsEndpoint = "/v1/{division}/system/Divisions"
 )
 
-func (s *Service) DivisionsGet(divisionID int, requestParams *DivisionsGetParams, ctx context.Context) (*DivisionsGetResponse, error) {
-	method := "GET"
+func (s *Service) DivisionsGet(requestParams *DivisionsGetParams, ctx context.Context) (*DivisionsGetResponse, error) {
+	method := http.MethodGet
 	responseBody := s.NewDivisionsGetResponse()
-	path := fmt.Sprintf(DivisionsEndpoint, divisionID)
+	path := s.rest.SubPath(DivisionsEndpoint)
 
 	// create a new HTTP request
 	httpReq, err := s.rest.NewRequest(ctx, method, path, nil)

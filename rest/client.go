@@ -10,6 +10,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/tim-online/go-exactonline/utils"
@@ -36,6 +37,8 @@ type Client struct {
 	// Url pointing to base Exact Online API
 	baseURL *url.URL
 
+	divisionID int
+
 	// Debugging flag
 	debug bool
 
@@ -51,6 +54,10 @@ func (c *Client) SetBaseURL(baseURL *url.URL) {
 	c.baseURL = baseURL
 }
 
+func (c *Client) SetDivisionID(divisionID int) {
+	c.divisionID = divisionID
+}
+
 func (c *Client) SetDebug(debug bool) {
 	c.debug = debug
 }
@@ -60,6 +67,7 @@ func (c *Client) SetUserAgent(userAgent string) {
 }
 
 func (c *Client) NewRequest(ctx context.Context, method, path string, body interface{}) (*http.Request, error) {
+	path = c.SubPath(path)
 	u := c.GetEndpoint(path)
 
 	buf := new(bytes.Buffer)
@@ -84,6 +92,12 @@ func (c *Client) NewRequest(ctx context.Context, method, path string, body inter
 	req.Header.Add("Accept", mediaType)
 	req.Header.Add("User-Agent", c.userAgent)
 	return req, nil
+}
+
+func (c *Client) SubPath(path string) string {
+	divisionID := strconv.Itoa(c.divisionID)
+	path = strings.Replace(path, "{division}", divisionID, 1)
+	return path
 }
 
 func (c *Client) GetEndpoint(path string) *url.URL {

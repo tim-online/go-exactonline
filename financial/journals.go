@@ -2,7 +2,6 @@ package financial
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/tim-online/go-exactonline/odata"
@@ -10,16 +9,16 @@ import (
 )
 
 const (
-	JournalsEndpoint = "/v1/%d/financial/Journals"
+	JournalsEndpoint = "/v1/{division}/financial/Journals"
 )
 
 // Journals endpoint
 // - https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialJournals
 
-func (s *Service) JournalsGet(divisionID int, requestParams *JournalsGetParams, ctx context.Context) (*JournalsGetResponse, error) {
+func (s *Service) JournalsGet(requestParams *JournalsGetParams, ctx context.Context) (*JournalsGetResponse, error) {
 	method := http.MethodGet
 	responseBody := s.NewJournalsGetResponse()
-	path := fmt.Sprintf(JournalsEndpoint, divisionID)
+	path := s.rest.SubPath(JournalsEndpoint)
 
 	// create a new HTTP request
 	httpReq, err := s.rest.NewRequest(ctx, method, path, nil)
