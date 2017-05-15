@@ -672,7 +672,7 @@
 
 ## Items
 
-- [ ] [GET /api/v1/{division}/logistics/Items](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=LogisticsItems)
+- [x] [GET /api/v1/{division}/logistics/Items](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=LogisticsItems)
 - [ ] [POST /api/v1/{division}/logistics/Items](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=LogisticsItems)
 - [ ] [PUT /api/v1/{division}/logistics/Items](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=LogisticsItems)
 - [ ] [DELETE /api/v1/{division}/logistics/Items](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=LogisticsItems)
