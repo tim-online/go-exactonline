@@ -160,3 +160,12 @@ type SalesOrderLine struct {
 	VATCodeDescription      edm.String   `json:"VATCodeDescription"`
 	VATPercentage           edm.Double   `json:"VATPercentage"`
 }
+
+const (
+	OrderStatusOpen      OrderStatus = 12
+	OrderStatusPartial   OrderStatus = 20
+	OrderStatusComplete  OrderStatus = 21
+	OrderStatusCancelled OrderStatus = 45 // following documentation spelling
+)
+
+type OrderStatus edm.Int16

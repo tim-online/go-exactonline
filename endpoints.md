@@ -1290,7 +1290,7 @@
 
 ## SalesOrderLines
 
-- [ ] [GET /api/v1/{division}/salesorder/SalesOrderLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesOrderSalesOrderLines)
+- [x] [GET /api/v1/{division}/salesorder/SalesOrderLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesOrderSalesOrderLines)
 - [ ] [POST /api/v1/{division}/salesorder/SalesOrderLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesOrderSalesOrderLines)
 - [ ] [PUT /api/v1/{division}/salesorder/SalesOrderLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesOrderSalesOrderLines)
 - [ ] [DELETE /api/v1/{division}/salesorder/SalesOrderLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesOrderSalesOrderLines)
