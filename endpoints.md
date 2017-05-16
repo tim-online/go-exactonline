@@ -1254,14 +1254,14 @@
 
 ## SalesInvoiceLines
 
-- [ ] [GET /api/v1/{division}/salesinvoice/SalesInvoiceLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoiceLines)
+- [x] [GET /api/v1/{division}/salesinvoice/SalesInvoiceLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoiceLines)
 - [ ] [POST /api/v1/{division}/salesinvoice/SalesInvoiceLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoiceLines)
 - [ ] [PUT /api/v1/{division}/salesinvoice/SalesInvoiceLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoiceLines)
 - [ ] [DELETE /api/v1/{division}/salesinvoice/SalesInvoiceLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoiceLines)
 
 ## SalesInvoices
 
-- [ ] [GET /api/v1/{division}/salesinvoice/SalesInvoices](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoices)
+- [x] [GET /api/v1/{division}/salesinvoice/SalesInvoices](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoices)
 - [ ] [POST /api/v1/{division}/salesinvoice/SalesInvoices](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoices)
 - [ ] [PUT /api/v1/{division}/salesinvoice/SalesInvoices](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoices)
 - [ ] [DELETE /api/v1/{division}/salesinvoice/SalesInvoices](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoices)
