@@ -2,6 +2,7 @@ package salesinvoice
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/tim-online/go-exactonline/edm"
 	"github.com/tim-online/go-exactonline/utils"
@@ -10,65 +11,109 @@ import (
 type SalesInvoices []SalesInvoice
 
 type SalesInvoice struct {
-	InvoiceID                            edm.GUID          `json:"InvoiceID"`
-	AmountDC                             edm.Double        `json:"AmountDC"`
-	AmountFC                             edm.Double        `json:"AmountFC"`
-	Created                              edm.DateTime      `json:"Created"`
-	Creator                              edm.GUID          `json:"Creator"`
-	CreatorFullName                      edm.String        `json:"CreatorFullName"`
-	Currency                             edm.String        `json:"Currency"`
-	DeliverTo                            edm.GUID          `json:"DeliverTo"`
-	DeliverToAddress                     edm.GUID          `json:"DeliverToAddress"`
-	DeliverToContactPerson               edm.GUID          `json:"DeliverToContactPerson"`
-	DeliverToContactPersonFullName       edm.String        `json:"DeliverToContactPersonFullName"`
-	DeliverToName                        edm.String        `json:"DeliverToName"`
-	Description                          edm.String        `json:"Description"`
-	Division                             edm.Int32         `json:"Division"`
-	Document                             edm.GUID          `json:"Document"`
-	DocumentNumber                       edm.Int32         `json:"DocumentNumber"`
-	DocumentSubject                      edm.String        `json:"DocumentSubject"`
-	DueDate                              edm.DateTime      `json:"DueDate"`
-	ExtraDutyAmountFC                    edm.Double        `json:"ExtraDutyAmountFC"`
-	InvoiceDate                          edm.DateTime      `json:"InvoiceDate"`
-	InvoiceNumber                        edm.Int32         `json:"InvoiceNumber"`
-	InvoiceTo                            edm.GUID          `json:"InvoiceTo"`
-	InvoiceToContactPerson               edm.GUID          `json:"InvoiceToContactPerson"`
-	InvoiceToContactPersonFullName       edm.String        `json:"InvoiceToContactPersonFullName"`
-	InvoiceToName                        edm.String        `json:"InvoiceToName"`
-	IsExtraDuty                          edm.Boolean       `json:"IsExtraDuty"`
-	Journal                              edm.String        `json:"Journal"`
-	JournalDescription                   edm.String        `json:"JournalDescription"`
-	Modified                             edm.DateTime      `json:"Modified"`
-	Modifier                             edm.GUID          `json:"Modifier"`
-	ModifierFullName                     edm.String        `json:"ModifierFullName"`
-	OrderDate                            edm.DateTime      `json:"OrderDate"`
-	OrderedBy                            edm.GUID          `json:"OrderedBy"`
-	OrderedByContactPerson               edm.GUID          `json:"OrderedByContactPerson"`
-	OrderedByContactPersonFullName       edm.String        `json:"OrderedByContactPersonFullName"`
-	OrderedByName                        edm.String        `json:"OrderedByName"`
-	OrderNumber                          edm.Int32         `json:"OrderNumber"`
-	PaymentCondition                     edm.String        `json:"PaymentCondition"`
-	PaymentConditionDescription          edm.String        `json:"PaymentConditionDescription"`
-	PaymentReference                     edm.String        `json:"PaymentReference"`
-	Remarks                              edm.String        `json:"Remarks"`
-	SalesInvoiceLines                    SalesInvoiceLines `json:"SalesInvoiceLines"`
-	Salesperson                          edm.GUID          `json:"Salesperson"`
-	SalespersonFullName                  edm.String        `json:"SalespersonFullName"`
-	StarterSalesInvoiceStatus            edm.Int16         `json:"StarterSalesInvoiceStatus"`
-	StarterSalesInvoiceStatusDescription edm.String        `json:"StarterSalesInvoiceStatusDescription"`
-	Status                               edm.Int16         `json:"Status"`
-	StatusDescription                    edm.String        `json:"StatusDescription"`
-	TaxSchedule                          edm.GUID          `json:"TaxSchedule"`
-	TaxScheduleCode                      edm.String        `json:"TaxScheduleCode"`
-	TaxScheduleDescription               edm.String        `json:"TaxScheduleDescription"`
-	Type                                 edm.Int32         `json:"Type"`
-	TypeDescription                      edm.String        `json:"TypeDescription"`
-	VATAmountDC                          edm.Double        `json:"VATAmountDC"`
-	VATAmountFC                          edm.Double        `json:"VATAmountFC"`
-	WithholdingTaxAmountFC               edm.Double        `json:"WithholdingTaxAmountFC"`
-	WithholdingTaxBaseAmount             edm.Double        `json:"WithholdingTaxBaseAmount"`
-	WithholdingTaxPercentage             edm.Double        `json:"WithholdingTaxPercentage"`
-	YourRef                              edm.String        `json:"YourRef"`
+	InvoiceID                            edm.GUID          `json:"InvoiceID"`                            // Primary key
+	AmountDC                             edm.Double        `json:"AmountDC"`                             // For the header lines (LineNumber = 0) of an entry this is the SUM(AmountDC) of all lines
+	AmountFC                             edm.Double        `json:"AmountFC"`                             // For the header this is the sum of all lines, including VAT
+	Created                              edm.DateTime      `json:"Created"`                              // Creation date
+	Creator                              edm.GUID          `json:"Creator"`                              // User ID of creator
+	CreatorFullName                      edm.String        `json:"CreatorFullName"`                      // Name of creator
+	Currency                             edm.String        `json:"Currency"`                             // Currency for the invoice. Default this is the currency of the administration
+	DeliverTo                            edm.GUID          `json:"DeliverTo"`                            // Delivery account for invoice
+	DeliverToAddress                     edm.GUID          `json:"DeliverToAddress"`                     // Address of delivery as per invoice delivery account
+	DeliverToContactPerson               edm.GUID          `json:"DeliverToContactPerson"`               // Delivery account person for invoice
+	DeliverToContactPersonFullName       edm.String        `json:"DeliverToContactPersonFullName"`       // Name of delivery account's contact person as per invoice
+	DeliverToName                        edm.String        `json:"DeliverToName"`                        // Name of the delivery account's customer as per invoice
+	Description                          edm.String        `json:"Description"`                          // Description. Can be different for header and lines
+	Division                             edm.Int32         `json:"Division"`                             // Division code
+	Document                             edm.GUID          `json:"Document"`                             // Document that is manually linked to the invoice
+	DocumentNumber                       edm.Int32         `json:"DocumentNumber"`                       // Number of the document
+	DocumentSubject                      edm.String        `json:"DocumentSubject"`                      // Subject of the document
+	DueDate                              edm.DateTime      `json:"DueDate"`                              // The due date for payments. This date is calculated based on the EntryDate and the Paymentcondition
+	ExtraDutyAmountFC                    edm.Double        `json:"ExtraDutyAmountFC"`                    // Extra duty amount in the currency of the transaction. Both extra duty amount and VAT amount need to be specified in order to differ this property from automatically calculated.
+	InvoiceDate                          edm.DateTime      `json:"InvoiceDate"`                          // Official date for the invoice. When the invoice is entered it's equal to the field 'EntryDate'. During the printing process the invoice date can be entered
+	InvoiceNumber                        edm.Int32         `json:"InvoiceNumber"`                        // Assigned at entry or at printing depending on setting. The number assigned is based on the freenumbers as defined for the Journal. When printing the field InvoiceNumber is copied to the fields EntryNumber and InvoiceNumber of the sales entry
+	InvoiceTo                            edm.GUID          `json:"InvoiceTo"`                            // Reference to the Customer who will receive the invoice
+	InvoiceToContactPerson               edm.GUID          `json:"InvoiceToContactPerson"`               // Reference to the Contact person of the customer who will receive the invoice
+	InvoiceToContactPersonFullName       edm.String        `json:"InvoiceToContactPersonFullName"`       // Name of the contact person of the customer who will receive the invoice
+	InvoiceToName                        edm.String        `json:"InvoiceToName"`                        // Name of the customer who will receive the invoice
+	IsExtraDuty                          edm.Boolean       `json:"IsExtraDuty"`                          // Indicates whether the invoice has extra duty
+	Journal                              edm.String        `json:"Journal"`                              // The journal code. Every invoice should be linked to a sales journal
+	JournalDescription                   edm.String        `json:"JournalDescription"`                   // Description of Journal
+	Modified                             edm.DateTime      `json:"Modified"`                             // Last modified date
+	Modifier                             edm.GUID          `json:"Modifier"`                             // User ID of modifier
+	ModifierFullName                     edm.String        `json:"ModifierFullName"`                     // Name of modifier
+	OrderDate                            edm.DateTime      `json:"OrderDate"`                            // Order date
+	OrderedBy                            edm.GUID          `json:"OrderedBy"`                            // Customer who ordered the invoice
+	OrderedByContactPerson               edm.GUID          `json:"OrderedByContactPerson"`               // Contact person of customer who ordered the invoice
+	OrderedByContactPersonFullName       edm.String        `json:"OrderedByContactPersonFullName"`       // Name of contact person of customer who ordered the invoice
+	OrderedByName                        edm.String        `json:"OrderedByName"`                        // Name of customer who ordered the invoice
+	OrderNumber                          edm.Int32         `json:"OrderNumber"`                          // Number to identify the order. By default the number is based on a setting for the first free number, but you can post your own number.
+	PaymentCondition                     edm.String        `json:"PaymentCondition"`                     // The payment condition used for due date and discount calculation
+	PaymentConditionDescription          edm.String        `json:"PaymentConditionDescription"`          // Description of PaymentCondition
+	PaymentReference                     edm.String        `json:"PaymentReference"`                     // Payment reference for sales invoice
+	Remarks                              edm.String        `json:"Remarks"`                              // Extra remarks
+	SalesInvoiceLines                    SalesInvoiceLines `json:"SalesInvoiceLines"`                    // Collection of lines
+	Salesperson                          edm.GUID          `json:"Salesperson"`                          // Sales representative
+	SalespersonFullName                  edm.String        `json:"SalespersonFullName"`                  // Name of sales representative
+	StarterSalesInvoiceStatus            edm.Int16         `json:"StarterSalesInvoiceStatus"`            // Starter Sales invoice status (for starter functionality)
+	StarterSalesInvoiceStatusDescription edm.String        `json:"StarterSalesInvoiceStatusDescription"` // Description of StarterSalesInvoiceStatus
+	Status                               edm.Int16         `json:"Status"`                               // The status of the entry. 10 = draft. During the creation of an invoice draft records occur in the draft modus if during an invoice a new page with lines is triggered. If the user leaves the invoice in an abnormal way the draft invoices can be recovered. Draft invoices are not included in financial reports, balances etc. 20 = open. Open invoices can be changed. New invoices get the status open by default. 50 = processed. Processed invoices can't be changed anymore. Processing is done via printing. Processed invoices can't be reopened
+	StatusDescription                    edm.String        `json:"StatusDescription"`                    // Description of Status
+	TaxSchedule                          edm.GUID          `json:"TaxSchedule"`                          // Obsolete
+	TaxScheduleCode                      edm.String        `json:"TaxScheduleCode"`                      // Obsolete
+	TaxScheduleDescription               edm.String        `json:"TaxScheduleDescription"`               // Obsolete
+	Type                                 InvoiceType       `json:"Type"`                                 // Indicates the type of invoice Values: 8020 - Sales invoices, 8021 - Sales credit note
+	TypeDescription                      edm.String        `json:"TypeDescription"`                      // Description of the type
+	VATAmountDC                          edm.Double        `json:"VATAmountDC"`                          // Total VAT amount in the default currency of the company
+	VATAmountFC                          edm.Double        `json:"VATAmountFC"`                          // Total VAT amount in the currency of the transaction
+	WithholdingTaxAmountFC               edm.Double        `json:"WithholdingTaxAmountFC"`               // Withholding tax amount applied to sales invoice
+	WithholdingTaxBaseAmount             edm.Double        `json:"WithholdingTaxBaseAmount"`             // Withholding tax base amount to calculate withholding amount
+	WithholdingTaxPercentage             edm.Double        `json:"WithholdingTaxPercentage"`             // Withholding tax percentage applied to sales invoice
+	YourRef                              edm.String        `json:"YourRef"`                              // The invoice number of the customer
+}
+
+type NewSalesInvoice struct {
+	InvoiceID                edm.GUID             `json:"InvoiceID"`                // Primary key
+	Currency                 edm.String           `json:"Currency"`                 // Currency for the invoice. Default this is the currency of the administration
+	DeliverTo                edm.GUID             `json:"DeliverTo"`                // Delivery account for invoice
+	DeliverToAddress         edm.GUID             `json:"DeliverToAddress"`         // Address of delivery as per invoice delivery account
+	DeliverToContactPerson   edm.GUID             `json:"DeliverToContactPerson"`   // Delivery account person for invoice
+	Description              edm.String           `json:"Description"`              // Description. Can be different for header and lines
+	Document                 edm.GUID             `json:"Document"`                 // Document that is manually linked to the invoice
+	DueDate                  edm.DateTime         `json:"DueDate"`                  // The due date for payments. This date is calculated based on the EntryDate and the Paymentcondition
+	ExtraDutyAmountFC        edm.Double           `json:"ExtraDutyAmountFC"`        // Extra duty amount in the currency of the transaction. Both extra duty amount and VAT amount need to be specified in order to differ this property from automatically calculated.
+	InvoiceTo                edm.GUID             `json:"InvoiceTo"`                // Reference to the Customer who will receive the invoice
+	InvoiceToContactPerson   edm.GUID             `json:"InvoiceToContactPerson"`   // Reference to the Contact person of the customer who will receive the invoice
+	IsExtraDuty              edm.Boolean          `json:"IsExtraDuty"`              // Indicates whether the invoice has extra duty
+	Journal                  edm.String           `json:"Journal"`                  // The journal code. Every invoice should be linked to a sales journal
+	OrderDate                edm.DateTime         `json:"OrderDate"`                // Order date
+	OrderedBy                edm.GUID             `json:"OrderedBy"`                // Customer who ordered the invoice
+	OrderedByContactPerson   edm.GUID             `json:"OrderedByContactPerson"`   // Contact person of customer who ordered the invoice
+	OrderNumber              edm.Int32            `json:"OrderNumber"`              // Number to identify the order. By default the number is based on a setting for the first free number, but you can post your own number.
+	PaymentCondition         edm.String           `json:"PaymentCondition"`         // The payment condition used for due date and discount calculation
+	PaymentReference         edm.String           `json:"PaymentReference"`         // Payment reference for sales invoice
+	Remarks                  edm.String           `json:"Remarks"`                  // Extra remarks
+	SalesInvoiceLines        NewSalesInvoiceLines `json:"SalesInvoiceLines"`        // Collection of lines
+	Salesperson              edm.GUID             `json:"Salesperson"`              // Sales representative
+	TaxSchedule              edm.GUID             `json:"TaxSchedule"`              // Obsolete
+	Type                     InvoiceType          `json:"Type"`                     // Indicates the type of invoice Values: 8020 - Sales invoices, 8021 - Sales credit note
+	WithholdingTaxAmountFC   edm.Double           `json:"WithholdingTaxAmountFC"`   // Withholding tax amount applied to sales invoice
+	WithholdingTaxBaseAmount edm.Double           `json:"WithholdingTaxBaseAmount"` // Withholding tax base amount to calculate withholding amount
+	WithholdingTaxPercentage edm.Double           `json:"WithholdingTaxPercentage"` // Withholding tax percentage applied to sales invoice
+	YourRef                  edm.String           `json:"YourRef"`                  // The invoice number of the customer
+}
+
+func (i *SalesInvoice) Validate() error {
+
+	if i.Journal == "" {
+		return errors.New("Journal is a required field")
+	}
+
+	if i.OrderedBy.String() == "" {
+		return errors.New("OrderedBy is a required field")
+	}
+
+	return nil
 }
 
 type SalesInvoiceLines []SalesInvoiceLine
@@ -164,4 +209,37 @@ type SalesInvoiceLine struct {
 	VATCode                 edm.String   `json:"VATCode"`
 	VATCodeDescription      edm.String   `json:"VATCodeDescription"`
 	VATPercentage           edm.Double   `json:"VATPercentage"`
+}
+
+type NewSalesInvoiceLines []NewSalesInvoiceLine
+
+type NewSalesInvoiceLine struct {
+	ID                  edm.GUID     `json:"ID"`                  // Primary key
+	AmountFC            edm.Double   `json:"AmountFC"`            // For normal lines it's the amount excluding VAT
+	CostCenter          edm.String   `json:"CostCenter"`          // Reference to Cost center
+	CostUnit            edm.String   `json:"CostUnit"`            // Reference to Cost unit
+	DeliveryDate        edm.DateTime `json:"DeliveryDate"`        // Delivery date of an item in a sales invoice. This is used for VAT on prepayments, only if sales order is not used in the license.
+	Description         edm.String   `json:"Description"`         // Description. Can be different for header and lines
+	Discount            edm.Double   `json:"Discount"`            // Discount given on the default price. Discount = (DefaultPrice of Item - PriceItem in line) / DefaultPrice of Item
+	Employee            edm.GUID     `json:"Employee"`            // Link to Employee originating from time and cost transactions
+	EndTime             edm.DateTime `json:"EndTime"`             // EndTime is used to store the last date of a period. EndTime is used in combination with StartTime
+	ExtraDutyAmountFC   edm.Double   `json:"ExtraDutyAmountFC"`   // Extra duty amount in the currency of the transaction. Both extra duty amount and VAT amount need to be specified in order to differ this property from automatically calculated.
+	ExtraDutyPercentage edm.Double   `json:"ExtraDutyPercentage"` // Extra duty percentage
+	GLAccount           edm.GUID     `json:"GLAccount"`           // The GL Account of the sales invoice line. This field is mandatory. This field is generated based on the revenue account of the item (or the related item group). G/L Account is also used to determine whether the costcenter / costunit is mandatory
+	InvoiceID           edm.GUID     `json:"InvoiceID"`           // The InvoiceID identifies the sales invoice. All the lines of a sales invoice have the same InvoiceID
+	Item                edm.GUID     `json:"Item"`                // Reference to the item that is sold in this sales invoice line
+	NetPrice            edm.Double   `json:"NetPrice"`            // Net price of the sales invoice line
+	Notes               edm.String   `json:"Notes"`               // Extra notes
+	Pricelist           edm.GUID     `json:"Pricelist"`           // Price list
+	Project             edm.GUID     `json:"Project"`             // The project to which the sales transaction line is linked. The project can be different per line. Sometimes also the project in the header is filled although this is not really used
+	ProjectWBS          edm.GUID     `json:"ProjectWBS"`          // WBS linked to the sales invoice
+	Quantity            edm.Double   `json:"Quantity"`            // The number of items sold in default units. The quantity shown in the entry screen is Quantity * UnitFactor
+	StartTime           edm.DateTime `json:"StartTime"`           // StartTime is used to store the first date of a period. StartTime is used in combination with EndTime
+	TaxSchedule         edm.GUID     `json:"TaxSchedule"`         // Obsolete
+	UnitCode            edm.String   `json:"UnitCode"`            // Code of Unit
+	UnitPrice           edm.Double   `json:"UnitPrice"`           // Price per unit
+	VATAmountDC         edm.Double   `json:"VATAmountDC"`         // VAT amount in the default currency of the company
+	VATAmountFC         edm.Double   `json:"VATAmountFC"`         // VAT amount in the currency of the transaction
+	VATCode             edm.String   `json:"VATCode"`             // The VAT code that is used when the invoice is registered
+	VATPercentage       edm.Double   `json:"VATPercentage"`       // The vat percentage of the VAT code. This is the percentage at the moment the invoice is created. It's also used for the default calculation of VAT amounts and VAT base amounts
 }

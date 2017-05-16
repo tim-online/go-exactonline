@@ -1262,7 +1262,7 @@
 ## SalesInvoices
 
 - [x] [GET /api/v1/{division}/salesinvoice/SalesInvoices](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoices)
-- [ ] [POST /api/v1/{division}/salesinvoice/SalesInvoices](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoices)
+- [x] [POST /api/v1/{division}/salesinvoice/SalesInvoices](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoices)
 - [ ] [PUT /api/v1/{division}/salesinvoice/SalesInvoices](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoices)
 - [ ] [DELETE /api/v1/{division}/salesinvoice/SalesInvoices](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesInvoiceSalesInvoices)
 
