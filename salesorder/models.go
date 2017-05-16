@@ -72,9 +72,9 @@ type SalesOrder struct {
 
 type SalesOrderLines []SalesOrderLine
 
-// standalone: "TransactionLines": []
-// deferred: "TransactionLines": {"__deferred": {}}
-// embedded: "TransactionLines": {"results": []}
+// standalone: "SalesOrderLines": []
+// deferred: "SalesOrderLines": {"__deferred": {}}
+// embedded: "SalesOrderLines": {"results": []}
 func (o *SalesOrderLines) UnmarshalJSON(data []byte) error {
 	type Results SalesOrderLines
 

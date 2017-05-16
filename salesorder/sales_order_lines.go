@@ -44,10 +44,8 @@ type SalesOrderLinesGetResponse struct {
 
 func (s *Service) NewSalesOrderLinesGetParams() *SalesOrderLinesGetParams {
 	selectFields, _ := utils.Fields(&SalesOrder{})
-	expandFields := []string{"SalesOrderLines"}
 	return &SalesOrderLinesGetParams{
 		Select: odata.NewSelect(selectFields),
-		Expand: odata.NewExpand(expandFields),
 		Filter: odata.NewFilter(),
 		Top:    odata.NewTop(),
 	}
@@ -56,7 +54,6 @@ func (s *Service) NewSalesOrderLinesGetParams() *SalesOrderLinesGetParams {
 type SalesOrderLinesGetParams struct {
 	// @TODO: check if this an OData struct or something
 	Select *odata.Select `schema:"$select,omitempty"`
-	Expand *odata.Expand `schema:"$expand,omitempty"`
 	Filter *odata.Filter `schema:"$filter,omitempty"`
 	Top    *odata.Top    `schema:"$top,omitempty"`
 }
