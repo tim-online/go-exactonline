@@ -12,6 +12,7 @@ import (
 	"github.com/tim-online/go-exactonline/salesinvoice"
 	"github.com/tim-online/go-exactonline/salesorder"
 	"github.com/tim-online/go-exactonline/system"
+	"github.com/tim-online/go-exactonline/vat"
 )
 
 const (
@@ -56,7 +57,7 @@ type Client struct {
 	// Subscription         *Subscription
 	System *system.Service
 	// Users                *Users
-	// VAT                  *VAT
+	VAT *vat.Service
 	// Workflow             *Workflow
 }
 
@@ -83,6 +84,7 @@ func NewClient(httpClient *http.Client, baseURL *url.URL, divisionID int) *Clien
 	c.SalesInvoice = salesinvoice.NewService(&c.Client)
 	c.SalesOrder = salesorder.NewService(&c.Client)
 	c.System = system.NewService(&c.Client)
+	c.VAT = vat.NewService(&c.Client)
 
 	return c
 }

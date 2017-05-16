@@ -1386,7 +1386,7 @@
 
 ## VATCodes
 
-- [ ] [GET /api/v1/{division}/vat/VATCodes](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=VATVATCodes)
+- [x] [GET /api/v1/{division}/vat/VATCodes](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=VATVATCodes)
 - [ ] [POST /api/v1/{division}/vat/VATCodes](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=VATVATCodes)
 - [ ] [PUT /api/v1/{division}/vat/VATCodes](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=VATVATCodes)
 - [ ] [DELETE /api/v1/{division}/vat/VATCodes](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=VATVATCodes)
