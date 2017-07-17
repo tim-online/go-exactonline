@@ -7,6 +7,8 @@ import (
 	"github.com/tim-online/go-exactonline/crm"
 	"github.com/tim-online/go-exactonline/financial"
 	"github.com/tim-online/go-exactonline/financialtransaction"
+	"github.com/tim-online/go-exactonline/general"
+	"github.com/tim-online/go-exactonline/generaljournalentry"
 	"github.com/tim-online/go-exactonline/logistics"
 	"github.com/tim-online/go-exactonline/rest"
 	"github.com/tim-online/go-exactonline/salesinvoice"
@@ -16,9 +18,10 @@ import (
 )
 
 const (
+	DefaultBaseURL = "https://start.exactonline.nl/api"
+
 	libraryVersion = "0.0.1"
 	userAgent      = "go-exactonline/" + libraryVersion
-	// apiPrefix      = "/api"
 )
 
 // Client manages communication with Exact Online API
@@ -38,8 +41,8 @@ type Client struct {
 	// Documents            *Documents
 	Financial            *financial.Service
 	FinancialTransaction *financialtransaction.Service
-	// General              *General
-	// GeneralJournalEntry  *GeneralJournalEntry
+	General              *general.Service
+	GeneralJournalEntry  *generaljournalentry.Service
 	// HRM                  *HRM
 	// Inventory            *Inventory
 	Logistics *logistics.Service
@@ -62,7 +65,7 @@ type Client struct {
 }
 
 // NewClient returns a new Exact Online API client
-func NewClient(httpClient *http.Client, baseURL *url.URL, divisionID int) *Client {
+func NewClient(httpClient *http.Client, divisionID int) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
@@ -72,6 +75,7 @@ func NewClient(httpClient *http.Client, baseURL *url.URL, divisionID int) *Clien
 	}
 
 	// set default options
+	baseURL, _ := url.Parse(DefaultBaseURL)
 	c.SetBaseURL(baseURL)
 	c.SetDivisionID(divisionID)
 	c.SetUserAgent(userAgent)
@@ -80,6 +84,8 @@ func NewClient(httpClient *http.Client, baseURL *url.URL, divisionID int) *Clien
 	c.CRM = crm.NewService(&c.Client)
 	c.Financial = financial.NewService(&c.Client)
 	c.FinancialTransaction = financialtransaction.NewService(&c.Client)
+	c.General = general.NewService(&c.Client)
+	c.GeneralJournalEntry = generaljournalentry.NewService(&c.Client)
 	c.Logistics = logistics.NewService(&c.Client)
 	c.SalesInvoice = salesinvoice.NewService(&c.Client)
 	c.SalesOrder = salesorder.NewService(&c.Client)

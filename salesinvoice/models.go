@@ -148,6 +148,7 @@ func (i *SalesInvoiceLines) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
+	// lines are embedded or deferred: only try embedded
 	envelope := &Envelope{Results: Results(*i)}
 	err = json.Unmarshal(data, envelope)
 	if err != nil {

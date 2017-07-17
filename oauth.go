@@ -19,37 +19,51 @@ type TokenHandler func(*oauth2.Token) error
 
 const (
 	localPort                 = "9090"
-	authorizationCallbackPath = "/authorization/callback"
+	authorizationCallbackPath = "/callback?app=test"
 	scope                     = "*"
 	oauthStateString          = ""
 	authorizationTimeout      = 60 * time.Second
 	tokenTimeout              = 5 * time.Second
 )
 
-func NewOauth2Config(baseURL *url.URL) *oauth2.Config {
+type Oauth2Config struct {
+	oauth2.Config
+}
+
+func NewOauth2Config() *Oauth2Config {
+	baseURL, _ := url.Parse(DefaultBaseURL)
 	// Strip trailing slash
 	baseURL.Path = strings.TrimSuffix(baseURL.Path, "/")
 
 	// These are not registered in the oauth library by default
 	oauth2.RegisterBrokenAuthHeaderProvider(baseURL.String())
 
-	return &oauth2.Config{
-		RedirectURL:  getAuthorizationCallbackURL(),
-		ClientID:     "",
-		ClientSecret: "",
-		Scopes:       []string{scope},
-		Endpoint: oauth2.Endpoint{
-			AuthURL:  baseURL.String() + "/oauth2/auth",
-			TokenURL: baseURL.String() + "/oauth2/token",
+	return &Oauth2Config{
+		Config: oauth2.Config{
+			RedirectURL:  "",
+			ClientID:     "",
+			ClientSecret: "",
+			Scopes:       []string{scope},
+			Endpoint: oauth2.Endpoint{
+				AuthURL:  baseURL.String() + "/oauth2/auth",
+				TokenURL: baseURL.String() + "/oauth2/token",
+			},
 		},
 	}
 }
 
-func getAuthorizationCallbackURL() string {
-	return fmt.Sprintf("http://localhost:%s%s", localPort, authorizationCallbackPath)
+func (c *Oauth2Config) SetBaseURL(baseURL *url.URL) {
+	c.Config.Endpoint = oauth2.Endpoint{
+		AuthURL:  baseURL.String() + "/oauth2/auth",
+		TokenURL: baseURL.String() + "/oauth2/token",
+	}
 }
 
-func GetNewOauth2Token(oauthConfig *oauth2.Config, linkCallback LinkHandler, authorizationCallback AuthorizationHandler, tokenCallback TokenHandler) (*oauth2.Token, error) {
+func (c *Oauth2Config) SetRedirectURL(redirectURL *url.URL) {
+	c.Config.RedirectURL = redirectURL.String()
+}
+
+func GetNewOauth2Token(oauthConfig *Oauth2Config, linkCallback LinkHandler, authorizationCallback AuthorizationHandler, tokenCallback TokenHandler) (*oauth2.Token, error) {
 	url, err := generateLoginLink(oauthConfig)
 	if err != nil {
 		return nil, err
@@ -88,7 +102,7 @@ func GetNewOauth2Token(oauthConfig *oauth2.Config, linkCallback LinkHandler, aut
 	return token, nil
 }
 
-func generateLoginLink(oauthConfig *oauth2.Config) (*url.URL, error) {
+func generateLoginLink(oauthConfig *Oauth2Config) (*url.URL, error) {
 	u := oauthConfig.AuthCodeURL(oauthStateString)
 	return url.Parse(u)
 }
@@ -145,7 +159,8 @@ func (c *authorizationController) callbackHandler(w http.ResponseWriter, r *http
 	c.resultCh <- code
 }
 
-func getOauth2Token(oauthConfig *oauth2.Config, code string) (*oauth2.Token, error) {
+func getOauth2Token(oauthConfig *Oauth2Config, code string) (*oauth2.Token, error) {
 	ctx, _ := context.WithTimeout(context.Background(), tokenTimeout)
 	return oauthConfig.Exchange(ctx, code)
 }
+

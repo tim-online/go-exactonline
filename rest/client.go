@@ -17,8 +17,9 @@ import (
 )
 
 const (
-	mediaType = "application/json"
-	charset   = "utf-8"
+	mediaType                 = "application/json"
+	charset                   = "utf-8"
+	customDescriptionLanguage = "EN-US"
 )
 
 // RequestCompletionCallback defines the type of the request callback function
@@ -27,6 +28,7 @@ type RequestCompletionCallback func(*http.Request, *http.Response)
 func New(http *http.Client) *Client {
 	return &Client{
 		http: http,
+		customDescriptionLanguage: customDescriptionLanguage,
 	}
 }
 
@@ -41,6 +43,9 @@ type Client struct {
 
 	// Debugging flag
 	debug bool
+
+	// Retrieve language sensitive properties such as descriptions in a specific language
+	customDescriptionLanguage string
 
 	// User agent for client
 	userAgent string
@@ -91,6 +96,7 @@ func (c *Client) NewRequest(ctx context.Context, method, path string, body inter
 	req.Header.Add("Content-Type", fmt.Sprintf("%s; charset=%s", mediaType, charset))
 	req.Header.Add("Accept", mediaType)
 	req.Header.Add("User-Agent", c.userAgent)
+	req.Header.Add("CustomDescriptionLanguage", c.customDescriptionLanguage)
 	return req, nil
 }
 

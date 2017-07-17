@@ -1,6 +1,11 @@
 package vat
 
-import "github.com/tim-online/go-exactonline/edm"
+import (
+	"encoding/json"
+
+	"github.com/tim-online/go-exactonline/edm"
+	"github.com/tim-online/go-exactonline/utils"
+)
 
 type VatCodes []VatCode
 
@@ -40,7 +45,7 @@ type VatCode struct {
 	ModifierFullName              edm.String     `json:"ModifierFullName"`              // User name of modifier
 	Percentage                    edm.Double     `json:"Percentage"`                    // Percentage of the VAT code
 	TaxReturnType                 edm.Int16      `json:"TaxReturnType"`                 // Indicates what type of Taxcode it is: can be VAT, IncomeTax
-	Type                          edm.String     `json:"Type"`                          // Indicates how the VAT amount should be calculated in relation to the invoice amount. B = VAT 0% (Only base amount), E = Excluding, I = Including, N = No VAT
+	Type                          Type           `json:"Type"`                          // Indicates how the VAT amount should be calculated in relation to the invoice amount. B = VAT 0% (Only base amount), E = Excluding, I = Including, N = No VAT
 	VatDocType                    edm.String     `json:"VatDocType"`                    // Field in VAT code maintenance to calculate different VATs depending on the selected document type. P = purchase invoice, F = freelance invoice, E = expense voucher. The field is valid for witholding tax type
 	VatMargin                     edm.Byte       `json:"VatMargin"`                     // The VAT margin scheme is used for the trade of secondhand goods which are purchased without VAT (for example when a company buys a secondhand good from a private person). In the VAT margin scheme, the VAT is not calculated based on the sales price. Instead of that, the VAT is calculated based on the margin (gross sales price minus the gross purchase price)
 	VATPartialRatio               edm.Int16      `json:"VATPartialRatio"`               // Partial ratio explains which part of the VAT the company has to pay. Used in some branches where the sellers have a bad reputation, so the buyers have to take over the VAT-liability
@@ -49,6 +54,47 @@ type VatCode struct {
 }
 
 type VATPercentages []VATPercentage
+
+// standalone: "SalesInvoiceLines": []
+// deferred: "SalesInvoiceLines": {"__deferred": {}}
+// embedded: "SalesInvoiceLines": {"results": []}
+func (p *VATPercentages) UnmarshalJSON(data []byte) error {
+	type Results VATPercentages
+
+	type Envelope struct {
+		Results  Results         `json:"results"`
+		Deferred json.RawMessage `json:"__deferred"`
+	}
+
+	// create the json tester
+	tester := &utils.JsonTester{}
+	err := json.Unmarshal(data, tester)
+	if err != nil {
+		return err
+	}
+
+	// test if json is array (standalone)
+	if tester.IsArray() {
+		results := &Results{}
+		err := json.Unmarshal(data, results)
+		if err != nil {
+			return err
+		}
+
+		*p = VATPercentages(*results)
+		return nil
+	}
+
+	// lines are embedded or deferred: only try embedded
+	envelope := &Envelope{Results: Results(*p)}
+	err = json.Unmarshal(data, envelope)
+	if err != nil {
+		return err
+	}
+
+	*p = VATPercentages(envelope.Results)
+	return nil
+}
 
 type VATPercentage struct {
 	ID               edm.GUID     `json:"ID"`               // Primary key
@@ -66,3 +112,12 @@ type VATPercentage struct {
 	Type             edm.Int16    `json:"Type"`             // 0 = Normal, 1 = Extra duty
 	VATCodeID        edm.GUID     `json:"VATCodeID"`        // VAT code
 }
+
+type Type edm.String
+
+const (
+	TypeBase      Type = "B"
+	TypeExcluding Type = "E"
+	TypeIncluding Type = "I"
+	TypeNo        Type = "N"
+)

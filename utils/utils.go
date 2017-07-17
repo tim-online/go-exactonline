@@ -43,6 +43,7 @@ func AddQueryParamsToRequest(requestParams interface{}, req *http.Request, skipE
 	encoder.RegisterEncoder(&odata.Filter{}, encodeSchemaMarshaler)
 	encoder.RegisterEncoder(&odata.Select{}, encodeSchemaMarshaler)
 	encoder.RegisterEncoder(&odata.Top{}, encodeSchemaMarshaler)
+	encoder.RegisterEncoder(&odata.OrderBy{}, encodeSchemaMarshaler)
 
 	err := encoder.Encode(requestParams, params)
 	if err != nil {
@@ -62,6 +63,7 @@ func AddQueryParamsToRequest(requestParams interface{}, req *http.Request, skipE
 	}
 
 	req.URL.RawQuery = query.Encode()
+	// force $ in query parameters
 	req.URL.RawQuery = strings.Replace(req.URL.RawQuery, "%24", "$", -1)
 	return nil
 }
