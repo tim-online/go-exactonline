@@ -30,6 +30,12 @@ func (d *DateTime) UnmarshalJSON(text []byte) (err error) {
 		return nil
 	}
 
+	// first try standard date
+	d.Time, err = time.Parse(time.RFC3339, value)
+	if err == nil {
+		return nil
+	}
+
 	// /Date(1488939627017)/
 	re := regexp.MustCompile(`[0-9]+`)
 	match := re.FindString(value)
