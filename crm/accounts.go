@@ -4,12 +4,13 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/tim-online/go-exactonline/edm"
 	"github.com/tim-online/go-exactonline/odata"
 	"github.com/tim-online/go-exactonline/utils"
 )
 
 const (
-	AccountsEndpoint = "/v1/{division}/crm/Accounts"
+	AccountsEndpoint = "/v1/{division}/crm/Accounts{id}"
 )
 
 // Accounts endpoint
@@ -40,6 +41,7 @@ func (s *Service) NewAccountsGetResponse() *AccountsGetResponse {
 
 type AccountsGetResponse struct {
 	Results Accounts `json:"results"`
+	Next    edm.URL  `json:"__next"`
 }
 
 func (s *Service) NewAccountsGetParams() *AccountsGetParams {
@@ -50,6 +52,7 @@ func (s *Service) NewAccountsGetParams() *AccountsGetParams {
 		Expand: odata.NewExpand(expandFields),
 		Filter: odata.NewFilter(),
 		Top:    odata.NewTop(),
+		Skip:   odata.NewSkip(),
 	}
 }
 
@@ -59,4 +62,5 @@ type AccountsGetParams struct {
 	Expand *odata.Expand `schema:"$expand,omitempty"`
 	Filter *odata.Filter `schema:"$filter,omitempty"`
 	Top    *odata.Top    `schema:"$top,omitempty"`
+	Skip   *odata.Skip   `schema:"$skip,omitempty"`
 }

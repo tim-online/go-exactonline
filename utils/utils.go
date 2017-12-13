@@ -44,6 +44,7 @@ func AddQueryParamsToRequest(requestParams interface{}, req *http.Request, skipE
 	encoder.RegisterEncoder(&odata.Select{}, encodeSchemaMarshaler)
 	encoder.RegisterEncoder(&odata.Top{}, encodeSchemaMarshaler)
 	encoder.RegisterEncoder(&odata.OrderBy{}, encodeSchemaMarshaler)
+	encoder.RegisterEncoder(&odata.Skip{}, encodeSchemaMarshaler)
 
 	err := encoder.Encode(requestParams, params)
 	if err != nil {

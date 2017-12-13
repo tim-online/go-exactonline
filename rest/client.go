@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -75,15 +76,24 @@ func (c *Client) NewRequest(ctx context.Context, method, path string, body inter
 	path = c.SubPath(path)
 	u := c.GetEndpoint(path)
 
-	buf := new(bytes.Buffer)
+	var b io.Reader
 	if body != nil {
-		err := json.NewEncoder(buf).Encode(body)
-		if err != nil {
-			return nil, err
+		// determine if body is an io.Reader or should be serialized
+		if r, ok := body.(io.Reader); ok {
+			b = r
+		} else {
+			buf := new(bytes.Buffer)
+			if body != nil {
+				err := json.NewEncoder(buf).Encode(body)
+				if err != nil {
+					return nil, err
+				}
+			}
+			b = buf
 		}
 	}
 
-	req, err := http.NewRequest(method, u.String(), buf)
+	req, err := http.NewRequest(method, u.String(), b)
 	if err != nil {
 		return nil, err
 	}
@@ -103,6 +113,20 @@ func (c *Client) NewRequest(ctx context.Context, method, path string, body inter
 func (c *Client) SubPath(path string) string {
 	divisionID := strconv.Itoa(c.divisionID)
 	path = strings.Replace(path, "{division}", divisionID, 1)
+	path = strings.Replace(path, "{id}", "", 1)
+	return path
+}
+
+func (c *Client) SubPathWithID(path string, id string) string {
+	divisionID := strconv.Itoa(c.divisionID)
+	path = strings.Replace(path, "{division}", divisionID, 1)
+
+	if id == "" {
+		path = strings.Replace(path, "{id}", id, 1)
+	} else {
+		id = fmt.Sprintf("(guid'%s')", id)
+		path = strings.Replace(path, "{id}", id, 1)
+	}
 	return path
 }
 
@@ -158,6 +182,10 @@ func (c *Client) Do(req *http.Request, responseBody interface{}) (*http.Response
 		return httpResp, err
 	}
 
+	if responseBody == nil {
+		return httpResp, err
+	}
+
 	// interface implements io.Writer: write Body to it
 	// if w, ok := response.Envelope.(io.Writer); ok {
 	// 	_, err := io.Copy(w, httpResp.Body)
@@ -204,8 +232,12 @@ func (c *Client) Do(req *http.Request, responseBody interface{}) (*http.Response
 
 	// check if interface has ".Results" field
 	r := reflect.ValueOf(responseBody)
-	configField := reflect.Indirect(r).FieldByName("Results")
-	hasResults := configField.IsValid()
+	val := reflect.Indirect(r)
+	hasResults := false
+	if val.Kind() == reflect.Struct {
+		field := val.FieldByName("Results")
+		hasResults = field.IsValid()
+	}
 
 	// check if json is an object
 	isArray := envelope.D.IsArray()

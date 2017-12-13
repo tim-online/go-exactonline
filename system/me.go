@@ -40,7 +40,9 @@ func (s *Service) NewMeGetResponse() *MeGetResponse {
 	return &MeGetResponse{}
 }
 
-type MeGetResponse []MeUser
+type MeGetResponse struct {
+	Results []MeUser `json:"results"`
+}
 
 type MeUser struct {
 	MetaData               edm.MetaData `json:"__metadata"`

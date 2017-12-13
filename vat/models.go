@@ -2,6 +2,7 @@ package vat
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/tim-online/go-exactonline/edm"
 	"github.com/tim-online/go-exactonline/utils"
@@ -51,6 +52,20 @@ type VatCode struct {
 	VATPartialRatio               edm.Int16      `json:"VATPartialRatio"`               // Partial ratio explains which part of the VAT the company has to pay. Used in some branches where the sellers have a bad reputation, so the buyers have to take over the VAT-liability
 	VATPercentages                VATPercentages `json:"VATPercentages"`                // VAT percentages. You can have several VAT percentages, with start and end dates
 	VATTransactionType            edm.String     `json:"VATTransactionType"`            // Indicates the type of transactions for which the VAT code may be used. B = Both, P = Purchase, S = Sales
+}
+
+func (c *VatCode) UnmarshalJSON(data []byte) error {
+	type Alias VatCode
+	alias := Alias(*c)
+	err := json.Unmarshal(data, &alias)
+	if err != nil {
+		return err
+	}
+
+	*c = VatCode(alias)
+	c.Code = edm.String(strings.TrimSpace(c.Code.String()))
+	c.AccountCode = edm.String(strings.TrimSpace(c.AccountCode.String()))
+	return nil
 }
 
 type VATPercentages []VATPercentage

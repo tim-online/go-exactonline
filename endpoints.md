@@ -226,8 +226,8 @@
 
 ## Accounts
 
-- [ ] [GET /api/v1/{division}/crm/Accounts](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=CRMAccounts)
-- [ ] [POST /api/v1/{division}/crm/Accounts](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=CRMAccounts)
+- [x] [GET /api/v1/{division}/crm/Accounts](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=CRMAccounts)
+- [x] [POST /api/v1/{division}/crm/Accounts](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=CRMAccounts)
 - [ ] [PUT /api/v1/{division}/crm/Accounts](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=CRMAccounts)
 - [ ] [DELETE /api/v1/{division}/crm/Accounts](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=CRMAccounts)
 
@@ -1226,8 +1226,8 @@
 
 ## SalesEntries
 
-- [ ] [GET /api/v1/{division}/salesentry/SalesEntries](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesEntrySalesEntries)
-- [ ] [POST /api/v1/{division}/salesentry/SalesEntries](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesEntrySalesEntries)
+- [x] [GET /api/v1/{division}/salesentry/SalesEntries](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesEntrySalesEntries)
+- [x] [POST /api/v1/{division}/salesentry/SalesEntries](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesEntrySalesEntries)
 - [ ] [PUT /api/v1/{division}/salesentry/SalesEntries](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesEntrySalesEntries)
 - [ ] [DELETE /api/v1/{division}/salesentry/SalesEntries](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=SalesEntrySalesEntries)
 

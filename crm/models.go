@@ -20,7 +20,7 @@ type Account struct {
 	AddressLine1                        edm.String      `json:"AddressLine1"`                        // Visit address first line
 	AddressLine2                        edm.String      `json:"AddressLine2"`                        // Visit address second line
 	AddressLine3                        edm.String      `json:"AddressLine3"`                        // Visit address third line
-	BankAccounts                        BankAccounts    `json:"BankAccounts"`                        // Collection of Bank accounts
+	BankAccounts                        BankAccounts    `json:"BankAccounts" http_methods:"-POST"`   // Collection of Bank accounts
 	Blocked                             edm.Boolean     `json:"Blocked"`                             // Indicates if the account is blocked
 	BRIN                                edm.GUID        `json:"BRIN"`                                // Obsolete
 	BusinessType                        edm.GUID        `json:"BusinessType"`                        // Reference to the business type of the account
@@ -154,6 +154,8 @@ type Account struct {
 	VATNumber                           edm.String      `json:"VATNumber"`                           // The number under which the account is known at the Value Added Tax collection agency
 	Website                             edm.String      `json:"Website"`                             // Website of the account
 }
+
+type NewAccount Account
 
 type BankAccounts []BankAccount
 
