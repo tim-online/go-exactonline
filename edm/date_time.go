@@ -19,6 +19,10 @@ func (d *DateTime) MarshalJSON() ([]byte, error) {
 	return json.Marshal(d.Time)
 }
 
+func (d DateTime) IsEmpty() bool {
+	return d.Time.IsZero()
+}
+
 func (d *DateTime) UnmarshalJSON(text []byte) (err error) {
 	var value string
 	err = json.Unmarshal(text, &value)

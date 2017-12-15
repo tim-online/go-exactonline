@@ -19,7 +19,7 @@ type Service struct {
 type Transactions []Transaction
 
 type Transaction struct {
-	EntryID                     edm.GUID          `json:"EntryID"`
+	EntryID                     edm.GUID          `json:"EntryID,omitempty"`
 	ClosingBalanceFC            edm.Double        `json:"ClosingBalanceFC"`
 	Created                     edm.DateTime      `json:"Created"`
 	Date                        edm.DateTime      `json:"Date"`
@@ -117,7 +117,7 @@ type TransactionLine struct {
 	DocumentNumber            edm.Int32    `json:"DocumentNumber"`
 	DocumentSubject           edm.String   `json:"DocumentSubject"`
 	DueDate                   edm.DateTime `json:"DueDate"`
-	EntryID                   edm.GUID     `json:"EntryID"`
+	EntryID                   edm.GUID     `json:"EntryID,omitempty"`
 	EntryNumber               edm.Int32    `json:"EntryNumber"`
 	ExchangeRate              edm.Double   `json:"ExchangeRate"`
 	ExtraDutyAmountFC         edm.Double   `json:"ExtraDutyAmountFC"`
@@ -351,7 +351,7 @@ func (t *TransactionType) String() string {
 type BankEntries []BankEntry
 
 type BankEntry struct {
-	EntryID                      edm.GUID       `json:"EntryID"`
+	EntryID                      edm.GUID       `json:"EntryID,omitempty"`
 	BankEntryLines               BankEntryLines `json:"BankEntryLines"`
 	BankStatementDocument        edm.GUID       `json:"BankStatementDocument"`
 	BankStatementDocumentNumber  edm.Int32      `json:"BankStatementDocumentNumber"`
@@ -432,7 +432,7 @@ type BankEntryLine struct {
 	Document              edm.GUID     `json:"Document"`
 	DocumentNumber        edm.Int32    `json:"DocumentNumber"`
 	DocumentSubject       edm.String   `json:"DocumentSubject"`
-	EntryID               edm.GUID     `json:"EntryID"`
+	EntryID               edm.GUID     `json:"EntryID,omitempty"`
 	EntryNumber           edm.Int32    `json:"EntryNumber"`
 	ExchangeRate          edm.Double   `json:"ExchangeRate"`
 	GLAccount             edm.GUID     `json:"GLAccount"`

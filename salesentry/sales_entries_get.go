@@ -7,6 +7,7 @@ import (
 
 	"github.com/tim-online/go-exactonline/edm"
 	"github.com/tim-online/go-exactonline/odata"
+	"github.com/tim-online/go-exactonline/omitempty"
 	"github.com/tim-online/go-exactonline/utils"
 )
 
@@ -66,11 +67,11 @@ type SalesEntriesGetParams struct {
 type SalesEntries []SalesEntry
 
 type SalesEntry struct {
-	EntryID                     edm.GUID        `json:"EntryID"`                     // The unique ID of the entry. Via this ID all transaction lines of a single entry can be retrieved
+	EntryID                     edm.GUID        `json:"EntryID,omitempty"`           // The unique ID of the entry. Via this ID all transaction lines of a single entry can be retrieved
 	AmountDC                    edm.Double      `json:"AmountDC"`                    // Amount in the default currency of the company. For the header lines (LineNumber = 0) of an entry this is the SUM(AmountDC) of all lines
 	AmountFC                    edm.Double      `json:"AmountFC"`                    // Amount in the currency of the transaction. For the header this is the sum of all lines, including VAT
 	BatchNumber                 edm.Int32       `json:"BatchNumber"`                 // The number of the batch of entries. Normally a batch consists of multiple entries. Batchnumbers are filled for invoices created by: - Fixed entries - Prolongation (only available with module hosting)
-	Created                     edm.DateTime    `json:"Created"`                     // Creation date
+	Created                     edm.DateTime    `json:"Created,omitempty"`           // Creation date
 	Creator                     edm.GUID        `json:"Creator"`                     // User ID of creator
 	CreatorFullName             edm.String      `json:"CreatorFullName"`             // Name of creator
 	Currency                    edm.String      `json:"Currency"`                    // Currency for the invoice. By default this is the currency of the administration
@@ -81,8 +82,8 @@ type SalesEntry struct {
 	Document                    edm.GUID        `json:"Document"`                    // Document that is manually linked to the invoice
 	DocumentNumber              edm.Int32       `json:"DocumentNumber"`              // Number of the document
 	DocumentSubject             edm.String      `json:"DocumentSubject"`             // Subject of the document
-	DueDate                     edm.DateTime    `json:"DueDate"`                     // The due date for payments. This date is calculated based on the EntryDate and the Paymentcondition
-	EntryDate                   edm.DateTime    `json:"EntryDate"`                   // The date when the invoice is entered
+	DueDate                     edm.DateTime    `json:"DueDate,omitempty"`           // The due date for payments. This date is calculated based on the EntryDate and the Paymentcondition
+	EntryDate                   edm.DateTime    `json:"EntryDate,omitempty"`         // The date when the invoice is entered
 	EntryNumber                 edm.Int32       `json:"EntryNumber"`                 // Entry number
 	ExternalLinkDescription     edm.String      `json:"ExternalLinkDescription"`     // Description of ExternalLink
 	ExternalLinkReference       edm.String      `json:"ExternalLinkReference"`       // Reference of ExternalLink
@@ -156,8 +157,12 @@ func (l *SalesEntryLines) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+func (e SalesEntry) MarshalJSON() ([]byte, error) {
+	return omitempty.MarshalJSON(e)
+}
+
 type SalesEntryLine struct {
-	ID                        edm.GUID     `json:"ID"`                        // Primary key
+	ID                        edm.GUID     `json:"ID,omitempty"`              // Primary key
 	AmountDC                  edm.Double   `json:"AmountDC"`                  // Amount in the default currency of the company. For almost all lines this can be calculated like: AmountDC = AmountFC * RateFC.
 	AmountFC                  edm.Double   `json:"AmountFC"`                  // For normal lines it's the amount excluding VAT
 	Asset                     edm.GUID     `json:"Asset"`                     // Reference to Asset
@@ -168,10 +173,10 @@ type SalesEntryLine struct {
 	CostUnitDescription       edm.String   `json:"CostUnitDescription"`       // Description of CostUnit
 	Description               edm.String   `json:"Description"`               // Description. Can be different for header and lines
 	Division                  edm.Int32    `json:"Division"`                  // Division code
-	EntryID                   edm.GUID     `json:"EntryID"`                   // The unique ID of the entry. Via this ID all transaction lines of a single entry can be retrieved
+	EntryID                   edm.GUID     `json:"EntryID,omitempty"`         // The unique ID of the entry. Via this ID all transaction lines of a single entry can be retrieved
 	ExtraDutyAmountFC         edm.Double   `json:"ExtraDutyAmountFC"`         // Extra duty amount in the currency of the transaction. Both extra duty amount and VAT amount need to be specified in order to differ this property from automatically calculated.
 	ExtraDutyPercentage       edm.Double   `json:"ExtraDutyPercentage"`       // Extra duty percentage for the item
-	From                      edm.DateTime `json:"From"`                      // From date for deferred revenue
+	From                      edm.DateTime `json:"From,omitempty"`            // From date for deferred revenue
 	GLAccount                 edm.GUID     `json:"GLAccount"`                 // The GL Account of the invoice line. This field is generated based on the revenue account of the item (or the related item group). G/L Account is also used to determine whether the costcenter / costunit is mandatory
 	GLAccountCode             edm.String   `json:"GLAccountCode"`             // Code of GLAccount
 	GLAccountDescription      edm.String   `json:"GLAccountDescription"`      // Description of GLAccount
@@ -193,7 +198,7 @@ type SalesEntryLine struct {
 	Subscription              edm.GUID     `json:"Subscription"`              // When generating invoices from subscriptions, this field records the link between invoice lines and subscription lines
 	SubscriptionDescription   edm.String   `json:"SubscriptionDescription"`   // Description of Subscription
 	TaxSchedule               edm.GUID     `json:"TaxSchedule"`               // Obsolete
-	To                        edm.DateTime `json:"To"`                        // To date for deferred revenue
+	To                        edm.DateTime `json:"To,omitempty"`              // To date for deferred revenue
 	TrackingNumber            edm.GUID     `json:"TrackingNumber"`            // Reference to TrackingNumber
 	TrackingNumberDescription edm.String   `json:"TrackingNumberDescription"` // Description of TrackingNumber
 	Type                      edm.Int32    `json:"Type"`                      // Type: 20 = Sales entry, 21 = Sales credit note
@@ -204,4 +209,8 @@ type SalesEntryLine struct {
 	VATCode                   edm.String   `json:"VATCode"`                   // The VAT code used when the invoice was registered
 	VATCodeDescription        edm.String   `json:"VATCodeDescription"`        // Description of VATCode
 	VATPercentage             edm.Double   `json:"VATPercentage"`             // The VAT percentage of the VAT code. This is the percentage at the moment the invoice is created. It's also used by the default calculation of VAT amounts and VAT base amounts
+}
+
+func (l SalesEntryLine) MarshalJSON() ([]byte, error) {
+	return omitempty.MarshalJSON(l)
 }

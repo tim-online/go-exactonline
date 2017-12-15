@@ -1,5 +1,7 @@
 package salesentry
 
+import "log"
+
 func (s *Service) NewEntryNumber() (int, error) {
 	// get highest JournalEntry.EntryNumber
 	biggest, err := s.GetHighestEntryNumber()
@@ -25,5 +27,6 @@ func (s *Service) GetHighestEntryNumber() (int, error) {
 		return 0, nil
 	}
 
+	log.Printf("%+v", resp.Results)
 	return int(resp.Results[0].EntryNumber), nil
 }

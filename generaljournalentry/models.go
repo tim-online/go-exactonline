@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/tim-online/go-exactonline/edm"
+	"github.com/tim-online/go-exactonline/omitempty"
 	"github.com/tim-online/go-exactonline/utils"
 )
 
@@ -97,7 +98,7 @@ type GeneralJournalEntryLine struct {
 	Document              edm.GUID     `json:"Document"`              // Reference to document
 	DocumentNumber        edm.Int32    `json:"DocumentNumber"`        // Document number
 	DocumentSubject       edm.String   `json:"DocumentSubject"`       // Document subject
-	EntryID               edm.GUID     `json:"EntryID"`               // Reference to header of the entry
+	EntryID               edm.GUID     `json:"EntryID,omitempty"`     // Reference to header of the entry
 	EntryNumber           edm.Int32    `json:"EntryNumber"`           // Entry number of the header
 	GLAccount             edm.GUID     `json:"GLAccount"`             // General ledger account
 	GLAccountCode         edm.String   `json:"GLAccountCode"`         // Code of GLAccount
@@ -144,7 +145,7 @@ type NewGeneralJournalEntryLine struct {
 	Date          edm.DateTime `json:"Date"`                    // Entry date
 	Description   edm.String   `json:"Description"`             // Description
 	Document      edm.GUID     `json:"Document,omitempty"`      // Reference to document
-	EntryID       edm.GUID     `json:"EntryID"`                 // Reference to header of the entry
+	EntryID       edm.GUID     `json:"EntryID,omitempty"`       // Reference to header of the entry
 	GLAccount     edm.GUID     `json:"GLAccount"`               // General ledger account
 	Notes         edm.String   `json:"Notes"`                   // Extra remarks
 	OffsetID      edm.GUID     `json:"OffsetID,omitempty"`      //
@@ -153,6 +154,10 @@ type NewGeneralJournalEntryLine struct {
 	Quantity      edm.Double   `json:"Quantity,omitempty"`      // Quantity
 	VATCode       edm.String   `json:"VATCode,omitempty"`       // VATCode can only be used if the general journal has VAT enabled. VAT Lines will be automatically created if the VATCode is specified when creating a new general journal entry.
 	VATPercentage edm.Double   `json:"VATPercentage,omitempty"` // Vat percentage
+}
+
+func (l NewGeneralJournalEntryLine) MarshalJSON() ([]byte, error) {
+	return omitempty.MarshalJSON(l)
 }
 
 type NewGeneralJournalEntryLines []NewGeneralJournalEntryLine
