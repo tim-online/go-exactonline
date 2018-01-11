@@ -119,7 +119,7 @@ type AccountsPutBody struct {
 	ShippingMethod             edm.GUID     `json:"ShippingMethod"`             // Default shipping method
 	StartDate                  edm.DateTime `json:"StartDate"`                  // Indicates in combination with the end date if the account is active
 	State                      edm.String   `json:"State"`                      // State/Province/County code When changing the Country and the State is filled, the State must be assigned with a valid value from the selected country or set to empty
-	Status                     edm.String   `json:"Status"`                     // If the status field is filled this means the account is a customer. The value indicates the customer status. Possible values: A=None, S=Suspect, P=Prospect, C=Customer
+	Status                     Status       `json:"Status"`                     // If the status field is filled this means the account is a customer. The value indicates the customer status. Possible values: A=None, S=Suspect, P=Prospect, C=Customer
 	TradeName                  edm.String   `json:"TradeName"`                  // Trade name can be registered and shown with the client (for all legislations)
 	UniqueTaxpayerReference    edm.String   `json:"UniqueTaxpayerReference"`    // Unique taxpayer reference for UK legislation
 	VATLiability               edm.String   `json:"VATLiability"`               // Indicates the VAT status of an account to be able to identify the relation that should be selected in the VAT debtor listing in Belgium
