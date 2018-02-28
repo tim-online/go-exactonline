@@ -15,7 +15,7 @@ type GeneralJournalEntry struct {
 	Created                  edm.DateTime             `json:"Created"`                  // Creation date
 	Currency                 edm.String               `json:"Currency"`                 // Currency code
 	Division                 edm.Int32                `json:"Division"`                 // Division code
-	EntryNumber              edm.Int32                `json:"EntryNumber"`              // Entry number
+	EntryNumber              edm.Int32                `json:"EntryNumber,omitempty"`    // Entry number
 	ExchangeRate             edm.Double               `json:"ExchangeRate"`             // Exchange rate
 	FinancialPeriod          edm.Int16                `json:"FinancialPeriod"`          // Financial period
 	FinancialYear            edm.Int16                `json:"FinancialYear"`            // Financial year
@@ -99,7 +99,7 @@ type GeneralJournalEntryLine struct {
 	DocumentNumber        edm.Int32    `json:"DocumentNumber"`        // Document number
 	DocumentSubject       edm.String   `json:"DocumentSubject"`       // Document subject
 	EntryID               edm.GUID     `json:"EntryID,omitempty"`     // Reference to header of the entry
-	EntryNumber           edm.Int32    `json:"EntryNumber"`           // Entry number of the header
+	EntryNumber           edm.Int32    `json:"EntryNumber,omitempty"` // Entry number of the header
 	GLAccount             edm.GUID     `json:"GLAccount"`             // General ledger account
 	GLAccountCode         edm.String   `json:"GLAccountCode"`         // Code of GLAccount
 	GLAccountDescription  edm.String   `json:"GLAccountDescription"`  // Description of GLAccount
@@ -125,7 +125,7 @@ type GeneralJournalEntryLine struct {
 type NewGeneralJournalEntry struct {
 	// EntryID                  edm.GUID                    `json:"EntryID,omitempty"`                  // Primary key
 	Currency                 edm.String                  `json:"Currency"`                 // Currency code
-	EntryNumber              edm.Int32                   `json:"EntryNumber"`              // Entry number
+	EntryNumber              edm.Int32                   `json:"EntryNumber,omitempty"`    // Entry number
 	ExchangeRate             edm.Double                  `json:"ExchangeRate"`             // Exchange rate
 	FinancialPeriod          edm.Int16                   `json:"FinancialPeriod"`          // Financial period
 	FinancialYear            edm.Int16                   `json:"FinancialYear"`            // Financial year
@@ -149,7 +149,7 @@ type NewGeneralJournalEntryLine struct {
 	GLAccount     edm.GUID     `json:"GLAccount"`               // General ledger account
 	Notes         edm.String   `json:"Notes"`                   // Extra remarks
 	OffsetID      edm.GUID     `json:"OffsetID,omitempty"`      //
-	OurRef        edm.Int32    `json:"OurRef"`                  // Our ref of general journal entry
+	OurRef        edm.Int32    `json:"OurRef,omitempty"`        // Our ref of general journal entry
 	Project       edm.GUID     `json:"Project,omitempty"`       // Reference to project
 	Quantity      edm.Double   `json:"Quantity,omitempty"`      // Quantity
 	VATCode       edm.String   `json:"VATCode,omitempty"`       // VATCode can only be used if the general journal has VAT enabled. VAT Lines will be automatically created if the VATCode is specified when creating a new general journal entry.

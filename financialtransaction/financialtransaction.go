@@ -127,7 +127,7 @@ type TransactionLine struct {
 	GLAccount                 edm.GUID     `json:"GLAccount"`
 	GLAccountCode             edm.String   `json:"GLAccountCode"`
 	GLAccountDescription      edm.String   `json:"GLAccountDescription"`
-	InvoiceNumber             edm.Int32    `json:"InvoiceNumber"`
+	InvoiceNumber             edm.Int32    `json:"InvoiceNumber,omitempty"`
 	Item                      edm.GUID     `json:"Item"`
 	ItemCode                  edm.String   `json:"ItemCode"`
 	ItemDescription           edm.String   `json:"ItemDescription"`
@@ -433,7 +433,7 @@ type BankEntryLine struct {
 	DocumentNumber        edm.Int32    `json:"DocumentNumber"`
 	DocumentSubject       edm.String   `json:"DocumentSubject"`
 	EntryID               edm.GUID     `json:"EntryID,omitempty"`
-	EntryNumber           edm.Int32    `json:"EntryNumber"`
+	EntryNumber           edm.Int32    `json:"EntryNumber,omitempty"`
 	ExchangeRate          edm.Double   `json:"ExchangeRate"`
 	GLAccount             edm.GUID     `json:"GLAccount"`
 	GLAccountCode         edm.String   `json:"GLAccountCode"`
@@ -444,7 +444,7 @@ type BankEntryLine struct {
 	ModifierFullName      edm.String   `json:"ModifierFullName"`
 	Notes                 edm.String   `json:"Notes"`
 	OffsetID              edm.GUID     `json:"OffsetID"`
-	OurRef                edm.Int32    `json:"OurRef"`
+	OurRef                edm.Int32    `json:"OurRef,omitempty"`
 	Project               edm.GUID     `json:"Project"`
 	ProjectCode           edm.String   `json:"ProjectCode"`
 	ProjectDescription    edm.String   `json:"ProjectDescription"`
