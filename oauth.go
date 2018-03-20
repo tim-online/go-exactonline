@@ -32,13 +32,8 @@ type Oauth2Config struct {
 
 func NewOauth2Config() *Oauth2Config {
 	baseURL, _ := url.Parse(DefaultBaseURL)
-	// Strip trailing slash
-	baseURL.Path = strings.TrimSuffix(baseURL.Path, "/")
 
-	// These are not registered in the oauth library by default
-	oauth2.RegisterBrokenAuthHeaderProvider(baseURL.String())
-
-	return &Oauth2Config{
+	config := &Oauth2Config{
 		Config: oauth2.Config{
 			RedirectURL:  "",
 			ClientID:     "",
@@ -50,9 +45,18 @@ func NewOauth2Config() *Oauth2Config {
 			},
 		},
 	}
+
+	config.SetBaseURL(baseURL)
+	return config
 }
 
 func (c *Oauth2Config) SetBaseURL(baseURL *url.URL) {
+	// Strip trailing slash
+	baseURL.Path = strings.TrimSuffix(baseURL.Path, "/")
+
+	// These are not registered in the oauth library by default
+	oauth2.RegisterBrokenAuthHeaderProvider(baseURL.String())
+
 	c.Config.Endpoint = oauth2.Endpoint{
 		AuthURL:  baseURL.String() + "/oauth2/auth",
 		TokenURL: baseURL.String() + "/oauth2/token",
@@ -163,4 +167,3 @@ func getOauth2Token(oauthConfig *Oauth2Config, code string) (*oauth2.Token, erro
 	ctx, _ := context.WithTimeout(context.Background(), tokenTimeout)
 	return oauthConfig.Exchange(ctx, code)
 }
-
