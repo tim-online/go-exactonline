@@ -554,7 +554,7 @@
 
 ## Costcenters
 
-- [ ] [GET /api/v1/{division}/hrm/Costcenters](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=HRMCostcenters)
+- [x] [GET /api/v1/{division}/hrm/Costcenters](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=HRMCostcenters)
 - [ ] [POST /api/v1/{division}/hrm/Costcenters](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=HRMCostcenters)
 - [ ] [PUT /api/v1/{division}/hrm/Costcenters](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=HRMCostcenters)
 - [ ] [DELETE /api/v1/{division}/hrm/Costcenters](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=HRMCostcenters)
