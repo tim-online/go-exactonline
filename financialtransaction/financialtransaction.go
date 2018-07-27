@@ -454,3 +454,107 @@ type BankEntryLine struct {
 	VATPercentage         edm.Double   `json:"VATPercentage"`
 	VATType               edm.String   `json:"VATType"`
 }
+
+type CashEntries []CashEntry
+
+type CashEntry struct {
+	EntryID            edm.GUID       `json:"EntryID"`            // Primary key
+	CashEntryLines     CashEntryLines `json:"CashEntryLines"`     // Collection of lines
+	ClosingBalanceFC   edm.Double     `json:"ClosingBalanceFC"`   // Closing balance in the currency of the transaction
+	Created            edm.DateTime   `json:"Created"`            // Creation date
+	Currency           edm.String     `json:"Currency"`           // Currency code
+	Division           edm.Int32      `json:"Division"`           // Division code
+	EntryNumber        edm.Int32      `json:"EntryNumber"`        // Entry number
+	FinancialPeriod    edm.Int16      `json:"FinancialPeriod"`    // Fiancial period
+	FinancialYear      edm.Int16      `json:"FinancialYear"`      // Fiancial year
+	JournalCode        edm.String     `json:"JournalCode"`        // Code of Journal
+	JournalDescription edm.String     `json:"JournalDescription"` // Description of Journal
+	Modified           edm.DateTime   `json:"Modified"`           // Last modified date
+	OpeningBalanceFC   edm.Double     `json:"OpeningBalanceFC"`   // Opening balance in the currency of the transaction
+	Status             edm.Int16      `json:"Status"`             // Status: 20 = Open, 50 = Processed
+	StatusDescription  edm.String     `json:"StatusDescription"`  // Description of Status}
+}
+
+type CashEntryLines []CashEntryLine
+
+// standalone: "CashEntryLines": []
+// deferred: "CashEntryLines": {"__deferred": {}}
+// embedded: "CashEntryLines": {"results": []}
+func (b *CashEntryLines) UnmarshalJSON(data []byte) (err error) {
+	type Results CashEntryLines
+
+	type Envelope struct {
+		Results  Results         `json:"results"`
+		Deferred json.RawMessage `json:"__deferred"`
+	}
+
+	tester := &utils.JsonTester{}
+	json.Unmarshal(data, tester)
+	if err != nil {
+		return err
+	}
+
+	// test if json is array (standalone)
+	if tester.IsArray() {
+		results := &Results{}
+		err = json.Unmarshal(data, results)
+		if err != nil {
+			return err
+		}
+
+		*b = CashEntryLines(*results)
+		return nil
+	}
+
+	envelope := &Envelope{Results: Results(*b)}
+
+	*b = CashEntryLines(envelope.Results)
+	return nil
+}
+
+type CashEntryLine struct {
+	ID                    edm.GUID     `json:"ID"`                    // Primary key
+	Account               edm.GUID     `json:"Account"`               // Reference to Account
+	AccountCode           edm.String   `json:"AccountCode"`           // Code of Account
+	AccountName           edm.String   `json:"AccountName"`           // Name of Account
+	AmountDC              edm.Double   `json:"AmountDC"`              // Amount in the default currency of the company
+	AmountFC              edm.Double   `json:"AmountFC"`              // Amount in the currency of the transaction
+	AmountVATFC           edm.Double   `json:"AmountVATFC"`           // Vat amount in the currency of the transaction
+	Asset                 edm.GUID     `json:"Asset"`                 // Reference to an asset
+	AssetCode             edm.String   `json:"AssetCode"`             // Code of Asset
+	AssetDescription      edm.String   `json:"AssetDescription"`      // Description of Asset
+	CostCenter            edm.String   `json:"CostCenter"`            // Reference to a cost center
+	CostCenterDescription edm.String   `json:"CostCenterDescription"` // Description of CostCenter
+	CostUnit              edm.String   `json:"CostUnit"`              // Reference to a cost unit
+	CostUnitDescription   edm.String   `json:"CostUnitDescription"`   // Description of CostUnit
+	Created               edm.DateTime `json:"Created"`               // Creation date
+	Creator               edm.GUID     `json:"Creator"`               // User ID of creator
+	CreatorFullName       edm.String   `json:"CreatorFullName"`       // Name of creator
+	Date                  edm.DateTime `json:"Date"`                  // Date
+	Description           edm.String   `json:"Description"`           // Description
+	Division              edm.Int32    `json:"Division"`              // Division code
+	Document              edm.GUID     `json:"Document"`              // Reference to a document
+	DocumentNumber        edm.Int32    `json:"DocumentNumber"`        // Number of Document
+	DocumentSubject       edm.String   `json:"DocumentSubject"`       // Subject of Document
+	EntryID               edm.GUID     `json:"EntryID"`               // Reference to the header
+	EntryNumber           edm.Int32    `json:"EntryNumber"`           // Entry number of the header
+	ExchangeRate          edm.Double   `json:"ExchangeRate"`          // Exchange rate
+	GLAccount             edm.GUID     `json:"GLAccount"`             // General ledger account
+	GLAccountCode         edm.String   `json:"GLAccountCode"`         // Code of GLAccount
+	GLAccountDescription  edm.String   `json:"GLAccountDescription"`  // Description of GLAccount
+	LineNumber            edm.Int32    `json:"LineNumber"`            // Line number
+	Modified              edm.DateTime `json:"Modified"`              // Last modified date
+	Modifier              edm.GUID     `json:"Modifier"`              // User ID of modifier
+	ModifierFullName      edm.String   `json:"ModifierFullName"`      // Name of modifier
+	Notes                 edm.String   `json:"Notes"`                 // Extra remarks
+	OffsetID              edm.GUID     `json:"OffsetID"`              // Reference to offset line
+	OurRef                edm.Int32    `json:"OurRef"`                // Invoice number
+	Project               edm.GUID     `json:"Project"`               // Reference to a project
+	ProjectCode           edm.String   `json:"ProjectCode"`           // Code of Project
+	ProjectDescription    edm.String   `json:"ProjectDescription"`    // Description of Project
+	Quantity              edm.Double   `json:"Quantity"`              // Quantity
+	VATCode               edm.String   `json:"VATCode"`               // Reference to vat code
+	VATCodeDescription    edm.String   `json:"VATCodeDescription"`    // Description of VATCode
+	VATPercentage         edm.Double   `json:"VATPercentage"`         // Vat code percentage
+	VATType               edm.String   `json:"VATType"`               // Type of vat code}
+}

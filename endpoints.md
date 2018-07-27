@@ -508,13 +508,13 @@
 
 ## CashEntries
 
-- [ ] [GET /api/v1/{division}/financialtransaction/CashEntries](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionCashEntries)
-- [ ] [POST /api/v1/{division}/financialtransaction/CashEntries](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionCashEntries)
+- [x] [GET /api/v1/{division}/financialtransaction/CashEntries](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionCashEntries)
+- [x] [POST /api/v1/{division}/financialtransaction/CashEntries](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionCashEntries)
 
 ## CashEntryLines
 
-- [ ] [GET /api/v1/{division}/financialtransaction/CashEntryLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionCashEntryLines)
-- [ ] [POST /api/v1/{division}/financialtransaction/CashEntryLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionCashEntryLines)
+- [x] [GET /api/v1/{division}/financialtransaction/CashEntryLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionCashEntryLines)
+- [x] [POST /api/v1/{division}/financialtransaction/CashEntryLines](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialTransactionCashEntryLines)
 
 ## TransactionLines
 
