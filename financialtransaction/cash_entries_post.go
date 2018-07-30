@@ -50,7 +50,7 @@ type NewCashEntry struct {
 	OpeningBalanceFC edm.Double        `json:"OpeningBalanceFC"` // Opening balance in the currency of the transaction
 }
 
-type NewCashEntryLines []NewCashEntry
+type NewCashEntryLines []NewCashEntryLine
 
 type NewCashEntryLine struct {
 	Account       edm.GUID     `json:"Account"`       // Reference to Account
