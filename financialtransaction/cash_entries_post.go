@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/tim-online/go-exactonline/edm"
+	"github.com/tim-online/go-exactonline/omitempty"
 )
 
 // POST
@@ -40,36 +41,40 @@ func (s *Service) NewCashEntriesPostResponse() *CashEntriesPostResponse {
 type CashEntriesPostResponse struct{}
 
 type NewCashEntry struct {
-	CashEntryLines   NewCashEntryLines `json:"CashEntryLines"`   // Collection of lines
-	ClosingBalanceFC edm.Double        `json:"ClosingBalanceFC"` // Closing balance in the currency of the transaction
-	Currency         edm.String        `json:"Currency"`         // Currency code
-	EntryNumber      edm.Int32         `json:"EntryNumber"`      // Entry number
-	FinancialPeriod  edm.Int16         `json:"FinancialPeriod"`  // Fiancial period
-	FinancialYear    edm.Int16         `json:"FinancialYear"`    // Fiancial year
-	JournalCode      edm.String        `json:"JournalCode"`      // Code of Journal
-	OpeningBalanceFC edm.Double        `json:"OpeningBalanceFC"` // Opening balance in the currency of the transaction
+	CashEntryLines   NewCashEntryLines `json:"CashEntryLines"`             // Collection of lines
+	ClosingBalanceFC edm.Double        `json:"ClosingBalanceFC,omitempty"` // Closing balance in the currency of the transaction
+	Currency         edm.String        `json:"Currency"`                   // Currency code
+	EntryNumber      edm.Int32         `json:"EntryNumber,omitempty"`      // Entry number
+	FinancialPeriod  edm.Int16         `json:"FinancialPeriod"`            // Fiancial period
+	FinancialYear    edm.Int16         `json:"FinancialYear"`              // Fiancial year
+	JournalCode      edm.String        `json:"JournalCode"`                // Code of Journal
+	OpeningBalanceFC edm.Double        `json:"OpeningBalanceFC,omitempty"` // Opening balance in the currency of the transaction
 }
 
 type NewCashEntryLines []NewCashEntryLine
 
 type NewCashEntryLine struct {
-	Account       edm.GUID     `json:"Account"`       // Reference to Account
-	AmountFC      edm.Double   `json:"AmountFC"`      // Amount in the currency of the transaction
-	AmountVATFC   edm.Double   `json:"AmountVATFC"`   // Vat amount in the currency of the transaction
-	Asset         edm.GUID     `json:"Asset"`         // Reference to an asset
-	CostCenter    edm.String   `json:"CostCenter"`    // Reference to a cost center
-	CostUnit      edm.String   `json:"CostUnit"`      // Reference to a cost unit
-	Date          edm.DateTime `json:"Date"`          // Date
-	Description   edm.String   `json:"Description"`   // Description
-	Document      edm.GUID     `json:"Document"`      // Reference to a document
-	EntryID       edm.GUID     `json:"EntryID"`       // Reference to the header
-	ExchangeRate  edm.Double   `json:"ExchangeRate"`  // Exchange rate
-	GLAccount     edm.GUID     `json:"GLAccount"`     // General ledger account
-	Notes         edm.String   `json:"Notes"`         // Extra remarks
-	OurRef        edm.Int32    `json:"OurRef"`        // Invoice number
-	Project       edm.GUID     `json:"Project"`       // Reference to a project
-	Quantity      edm.Double   `json:"Quantity"`      // Quantity
-	VATCode       edm.String   `json:"VATCode"`       // Reference to vat code
-	VATPercentage edm.Double   `json:"VATPercentage"` // Vat code percentage
-	VATType       edm.String   `json:"VATType"`       // Type of vat code
+	Account       edm.GUID     `json:"Account,omitempty"`       // Reference to Account
+	AmountFC      edm.Double   `json:"AmountFC"`                // Amount in the currency of the transaction
+	AmountVATFC   edm.Double   `json:"AmountVATFC"`             // Vat amount in the currency of the transaction
+	Asset         edm.GUID     `json:"Asset,omitempty"`         // Reference to an asset
+	CostCenter    edm.String   `json:"CostCenter,omitempty"`    // Reference to a cost center
+	CostUnit      edm.String   `json:"CostUnit,omitempty"`      // Reference to a cost unit
+	Date          edm.DateTime `json:"Date"`                    // Date
+	Description   edm.String   `json:"Description"`             // Description
+	Document      edm.GUID     `json:"Document,omitempty"`      // Reference to a document
+	EntryID       edm.GUID     `json:"EntryID,omitempty"`       // Reference to the header
+	ExchangeRate  edm.Double   `json:"ExchangeRate,omitempty"`  // Exchange rate
+	GLAccount     edm.GUID     `json:"GLAccount"`               // General ledger account
+	Notes         edm.String   `json:"Notes,omitempty"`         // Extra remarks
+	OurRef        edm.Int32    `json:"OurRef,omitempty"`        // Invoice number
+	Project       edm.GUID     `json:"Project,omitempty"`       // Reference to a project
+	Quantity      edm.Double   `json:"Quantity,omitempty"`      // Quantity
+	VATCode       edm.String   `json:"VATCode"`                 // Reference to vat code
+	VATPercentage edm.Double   `json:"VATPercentage,omitempty"` // Vat code percentage
+	VATType       edm.String   `json:"VATType,omitempty"`       // Type of vat code
+}
+
+func (l NewCashEntryLine) MarshalJSON() ([]byte, error) {
+	return omitempty.MarshalJSON(l)
 }
