@@ -30,6 +30,6 @@ func (g GUID) MarshalJSON() ([]byte, error) {
 	return json.Marshal(g.UUID)
 }
 
-func (g GUID) FromString(input string) {
+func (g *GUID) FromString(input string) {
 	g.UUID, _ = uuid.FromString(input)
 }
