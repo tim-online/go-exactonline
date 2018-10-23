@@ -40,7 +40,7 @@ type NewSalesEntryLine struct {
 	VATBaseAmountDC          edm.Double   `json:"VATBaseAmountDC"`          // The VAT base amount in the default currency of the company. This is calculated based on the VATBaseAmountFC
 	VATBaseAmountFC          edm.Double   `json:"VATBaseAmountFC"`          // The VAT base amount in invoice currency. This is calculated with the use of VAT codes. It's an internal value
 	VATCode                  edm.String   `json:"VATCode"`                  // The VAT code used when the invoice was registered
-	VATPercentage            edm.Double   `json:"VATPercentage"`            // The VAT percentage of the VAT code. This is the percentage at the moment the invoice is created. It's also used by the default calculation of VAT amounts and VAT base amounts
+	VATPercentage            edm.Double   `json:"VATPercentage,omitempty"`  // The VAT percentage of the VAT code. This is the percentage at the moment the invoice is created. It's also used by the default calculation of VAT amounts and VAT base amounts
 }
 
 func (l NewSalesEntryLine) MarshalJSON() ([]byte, error) {
