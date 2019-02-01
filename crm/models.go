@@ -37,7 +37,7 @@ type Account struct {
 	Classification7                     edm.GUID        `json:"Classification7"`                             // Account classification 7
 	Classification8                     edm.GUID        `json:"Classification8"`                             // Account classification 8
 	ClassificationDescription           edm.String      `json:"ClassificationDescription"`                   // Obsolete
-	Code                                edm.String      `json:"Code"`                                        // Unique key, fixed length numeric string with leading spaces, length 18. IMPORTANT: When you use OData $filter on this field you have to make sure the filter parameter contains the leading spaces
+	Code                                edm.String      `json:"Code,omitempty"`                              // Unique key, fixed length numeric string with leading spaces, length 18. IMPORTANT: When you use OData $filter on this field you have to make sure the filter parameter contains the leading spaces
 	CodeAtSupplier                      edm.String      `json:"CodeAtSupplier"`                              // Code under which your own company is known at the account
 	CompanySize                         edm.GUID        `json:"CompanySize"`                                 // Reference to Company size of the account
 	ConsolidationScenario               edm.Byte        `json:"ConsolidationScenario"`                       // Consolidation scenario (Time & Billing). Values: 0 = No consolidation, 1 = Item, 2 = Item + Project, 3 = Item + Employee, 4 = Item + Employee + Project, 5 = Project + WBS + Item, 6 = Project + WBS + Item + Employee. Item means in this case including Unit and Price, these also have to be the same to consolidate
