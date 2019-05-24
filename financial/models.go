@@ -260,3 +260,20 @@ func (g *GLAccountType) String() string {
 	}
 	return ""
 }
+
+type Periods []Period
+
+type Period struct {
+	ID               edm.GUID     `json:"ID"`               // Primary key
+	Created          edm.DateTime `json:"Created"`          // Creation date
+	Creator          edm.GUID     `json:"Creator"`          // User ID of creator
+	CreatorFullName  edm.String   `json:"CreatorFullName"`  // Name of creator
+	Division         edm.Int32    `json:"Division"`         // Division code
+	EndDate          edm.DateTime `json:"EndDate"`          // The end date of the period
+	FinPeriod        edm.Int16    `json:"FinPeriod"`        // The financial period. Usually the period is a month or quarter with period 1 starting on the first of January.
+	FinYear          edm.Int16    `json:"FinYear"`          // The financial year. The financial year and calendar year are not always aligned.
+	Modified         edm.DateTime `json:"Modified"`         // Last modified date
+	Modifier         edm.GUID     `json:"Modifier"`         // User ID of modifier
+	ModifierFullName edm.String   `json:"ModifierFullName"` // Name of modifier
+	StartDate        edm.DateTime `json:"StartDate"`        // The start date of a period. A start date should always succeed a previous end date. Except for the first year/period combination
+}

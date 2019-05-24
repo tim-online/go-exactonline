@@ -398,7 +398,7 @@
 
 ## FinancialPeriods
 
-- [ ] [GET /api/v1/{division}/financial/FinancialPeriods](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialFinancialPeriods)
+- [x] [GET /api/v1/{division}/financial/FinancialPeriods](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=FinancialFinancialPeriods)
 
 ## GLAccounts
 
