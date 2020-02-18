@@ -152,7 +152,7 @@ type NewGeneralJournalEntryLine struct {
 	OurRef        edm.Int32    `json:"OurRef,omitempty"`        // Our ref of general journal entry
 	Project       edm.GUID     `json:"Project,omitempty"`       // Reference to project
 	Quantity      edm.Double   `json:"Quantity,omitempty"`      // Quantity
-	VATCode       edm.String   `json:"VATCode,omitempty"`       // VATCode can only be used if the general journal has VAT enabled. VAT Lines will be automatically created if the VATCode is specified when creating a new general journal entry.
+	VATCode       *edm.String  `json:"VATCode,omitempty"`       // VATCode can only be used if the general journal has VAT enabled. VAT Lines will be automatically created if the VATCode is specified when creating a new general journal entry.
 	VATPercentage edm.Double   `json:"VATPercentage,omitempty"` // Vat percentage
 }
 
