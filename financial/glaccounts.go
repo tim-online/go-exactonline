@@ -48,6 +48,7 @@ func (s *Service) NewGLAccountsGetParams() *GLAccountsGetParams {
 		Select: odata.NewSelect(selectFields),
 		Filter: odata.NewFilter(),
 		Top:    odata.NewTop(),
+		Skip:   odata.NewSkip(),
 	}
 }
 
@@ -56,4 +57,5 @@ type GLAccountsGetParams struct {
 	Select *odata.Select `schema:"$select,omitempty"`
 	Filter *odata.Filter `schema:"$filter,omitempty"`
 	Top    *odata.Top    `schema:"$top,omitempty"`
+	Skip   *odata.Skip   `schema:"$skip,omitempty"`
 }
