@@ -13,6 +13,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/tim-online/go-exactonline/utils"
 )
@@ -23,12 +24,16 @@ const (
 	customDescriptionLanguage = "EN-US"
 )
 
+var (
+	rateLimits = make(map[int]*rateLimit)
+)
+
 // RequestCompletionCallback defines the type of the request callback function
 type RequestCompletionCallback func(*http.Request, *http.Response)
 
 func New(http *http.Client) *Client {
 	return &Client{
-		http: http,
+		http:                      http,
 		customDescriptionLanguage: customDescriptionLanguage,
 	}
 }
@@ -150,10 +155,14 @@ func (c *Client) Do(req *http.Request, responseBody interface{}) (*http.Response
 		log.Println(string(dump))
 	}
 
+	c.sleepUntilRequestLimit()
+
 	httpResp, err := c.http.Do(req)
 	if err != nil {
 		return nil, err
 	}
+
+	c.registerRequestLimit(httpResp)
 
 	if c.onRequestCompleted != nil {
 		c.onRequestCompleted(req, httpResp)
@@ -253,4 +262,48 @@ func (c *Client) Do(req *http.Request, responseBody interface{}) (*http.Response
 
 	err = json.Unmarshal(b, responseBody)
 	return httpResp, err
+}
+
+type rateLimit struct {
+	Limit     int
+	Remaining int
+	Reset     time.Time
+}
+
+func (c *Client) sleepUntilRequestLimit() {
+	if rateLimits[c.divisionID] == nil {
+		return
+	}
+
+	if rateLimits[c.divisionID].Remaining > 0 {
+		return
+	}
+
+	sleep := rateLimits[c.divisionID].Reset.Sub(time.Now())
+	time.Sleep(sleep)
+}
+
+func (c *Client) registerRequestLimit(req *http.Response) error {
+	if rateLimits[c.divisionID] == nil {
+		rateLimits[c.divisionID] = &rateLimit{}
+	}
+
+	var err error
+	rateLimits[c.divisionID].Limit, err = strconv.Atoi(req.Header.Get("X-Ratelimit-Minutely-Limit"))
+	if err != nil {
+		return err
+	}
+
+	rateLimits[c.divisionID].Remaining, err = strconv.Atoi(req.Header.Get("X-Ratelimit-Minutely-Remaining"))
+	if err != nil {
+		return err
+	}
+
+	timestamp, err := strconv.ParseInt(req.Header.Get("X-Ratelimit-Minutely-Reset"), 10, 64)
+	if err != nil {
+		return err
+	}
+
+	rateLimits[c.divisionID].Reset = time.Unix(0, timestamp*int64(time.Millisecond))
+	return nil
 }
