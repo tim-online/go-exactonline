@@ -325,7 +325,7 @@
 
 ## DocumentAttachments
 
-- [ ] [GET /api/v1/{division}/documents/DocumentAttachments](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=DocumentsDocumentAttachments)
+- [x] [GET /api/v1/{division}/documents/DocumentAttachments](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=DocumentsDocumentAttachments)
 - [ ] [POST /api/v1/{division}/documents/DocumentAttachments](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=DocumentsDocumentAttachments)
 - [ ] [PUT /api/v1/{division}/documents/DocumentAttachments](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=DocumentsDocumentAttachments)
 - [ ] [DELETE /api/v1/{division}/documents/DocumentAttachments](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=DocumentsDocumentAttachments)
@@ -343,7 +343,7 @@
 
 ## Documents
 
-- [ ] [GET /api/v1/{division}/documents/Documents](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=DocumentsDocuments)
+- [x] [GET /api/v1/{division}/documents/Documents](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=DocumentsDocuments)
 - [ ] [POST /api/v1/{division}/documents/Documents](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=DocumentsDocuments)
 - [ ] [PUT /api/v1/{division}/documents/Documents](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=DocumentsDocuments)
 - [ ] [DELETE /api/v1/{division}/documents/Documents](https://start.exactonline.nl/docs/HlpRestAPIResourcesDetails.aspx?name=DocumentsDocuments)

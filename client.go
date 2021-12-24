@@ -5,6 +5,7 @@ import (
 	"net/url"
 
 	"github.com/tim-online/go-exactonline/crm"
+	"github.com/tim-online/go-exactonline/document"
 	"github.com/tim-online/go-exactonline/financial"
 	"github.com/tim-online/go-exactonline/financialtransaction"
 	"github.com/tim-online/go-exactonline/general"
@@ -39,8 +40,8 @@ type Client struct {
 	// Bulk                 *Bulk
 	// Cashflow             *Cashflow
 	// ContinuousMonitoring *ContinuousMonitoring
-	CRM *crm.Service
-	// Documents            *Documents
+	CRM                  *crm.Service
+	Document             *document.Service
 	Financial            *financial.Service
 	FinancialTransaction *financialtransaction.Service
 	General              *general.Service
@@ -84,6 +85,7 @@ func NewClient(httpClient *http.Client, divisionID int) *Client {
 	c.SetDebug(false)
 
 	c.CRM = crm.NewService(&c.Client)
+	c.Document = document.NewService(&c.Client)
 	c.Financial = financial.NewService(&c.Client)
 	c.FinancialTransaction = financialtransaction.NewService(&c.Client)
 	c.General = general.NewService(&c.Client)

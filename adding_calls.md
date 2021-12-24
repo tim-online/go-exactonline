@@ -43,8 +43,8 @@ Generate struct values from a call:
 var types = [];
 $('#referencetable>tbody>tr:nth-child(n+2):visible').each(function(i, tr) {
    var name = $.trim($(tr).children('td:nth-child(2)').text());
-   var type = $.trim($(tr).children('td:nth-child(5)').text());
-   var description = $.trim($(tr).children('td:nth-child(6), td:nth-child(7)').text());
+   var type = $.trim($(tr).children('td:nth-child(6)').text());
+   var description = $.trim($(tr).children('td:nth-child(8), td:nth-child(9)').text());
    type = type.replace(/^Edm/, 'edm');
    type = type.replace(/^edm.Guid/, 'edm.GUID');
 
