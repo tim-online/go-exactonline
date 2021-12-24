@@ -1,6 +1,6 @@
 module github.com/tim-online/go-exactonline
 
-go 1.14
+go 1.15
 
 require (
 	github.com/aodin/date v0.0.0-20160219192542-c5f6146fc644
@@ -10,3 +10,5 @@ require (
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 )
+
+replace github.com/gorilla/schema => github.com/omniboost/schema v1.1.1-0.20191030093734-a170fe1a7240

@@ -50,6 +50,8 @@ type Client struct {
 	// Debugging flag
 	debug bool
 
+	disallowUnknownFields bool
+
 	// Retrieve language sensitive properties such as descriptions in a specific language
 	customDescriptionLanguage string
 
@@ -71,6 +73,10 @@ func (c *Client) SetDivisionID(divisionID int) {
 
 func (c *Client) SetDebug(debug bool) {
 	c.debug = debug
+}
+
+func (c *Client) SetDisallowUnknownFields(disallowUnknownFields bool) {
+	c.disallowUnknownFields = disallowUnknownFields
 }
 
 func (c *Client) SetUserAgent(userAgent string) {
@@ -231,7 +237,12 @@ func (c *Client) Do(req *http.Request, responseBody interface{}) (*http.Response
 	}
 
 	envelope := &Envelope{}
-	err = json.NewDecoder(httpResp.Body).Decode(envelope)
+	dec := json.NewDecoder(httpResp.Body)
+	if c.disallowUnknownFields {
+		dec.DisallowUnknownFields()
+	}
+
+	err = dec.Decode(envelope)
 	if err != nil {
 		return httpResp, err
 	}

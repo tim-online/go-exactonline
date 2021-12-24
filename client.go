@@ -103,6 +103,10 @@ func (c *Client) SetDebug(debug bool) {
 	c.Client.SetDebug(debug)
 }
 
+func (c *Client) SetDisallowUnknownFields(disallowUnknownFields bool) {
+	c.Client.SetDisallowUnknownFields(disallowUnknownFields)
+}
+
 func (c *Client) SetBaseURL(baseURL *url.URL) {
 	// set base url for use in http client
 	c.Client.SetBaseURL(baseURL)

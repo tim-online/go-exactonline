@@ -1,0 +1,7 @@
+export TOKEN_URL=""
+export CLIENT_ID=""
+export CLIENT_SECRET=""
+export REFRESH_TOKEN=""
+export DIVISION_ID=""
+export BASE_URL="https://start.exactonline.nl/api"
+export DEBUG="1"
