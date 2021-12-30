@@ -57,3 +57,35 @@ type DocumentAttachment struct {
 	FileSize   edm.Double `json:"FileSize"`     // File size of the attachment
 	Url        edm.String `json:"Url"`          // Url of the attachment. To get the file in its original format (xml, jpg, pdf, etc.) append &Download=1 to the url.
 }
+
+type DocumentTypeCategories []DocumentTypeCategory
+
+type DocumentTypeCategory struct {
+	ID          edm.Int32    `json:"ID,omitempty"`          // Primary key
+	Created     edm.DateTime `json:"Created,omitempty"`     // Creation date
+	Description edm.String   `json:"Description,omitempty"` // Document category type description
+	Modified    edm.DateTime `json:"Modified,omitempty"`    // Last modified date debugger
+}
+
+type DocumentCategories []DocumentCategory
+
+type DocumentCategory struct {
+	ID          edm.GUID     `json:"ID,omitempty"`          // Primary key
+	Created     edm.DateTime `json:"Created,omitempty"`     // Creation date
+	Description edm.String   `json:"Description,omitempty"` // Document category description
+	Modified    edm.DateTime `json:"Modified,omitempty"`    // Last modified date debugger eval code:12:9
+}
+
+type DocumentTypes []DocumentType
+
+type DocumentType struct {
+	ID                  edm.Int32    `json:"ID,omitempty"`                  // Primary key
+	Created             edm.DateTime `json:"Created,omitempty"`             // Creation date
+	Description         edm.String   `json:"Description,omitempty"`         // Document type description
+	DocumentIsCreatable edm.Boolean  `json:"DocumentIsCreatable,omitempty"` // Indicates if documents of this type can be created
+	DocumentIsDeletable edm.Boolean  `json:"DocumentIsDeletable,omitempty"` // Indicates if documents of this type can be deleted
+	DocumentIsUpdatable edm.Boolean  `json:"DocumentIsUpdatable,omitempty"` // Indicates if documents of this type can be updated
+	DocumentIsViewable  edm.Boolean  `json:"DocumentIsViewable,omitempty"`  // Indicates if documents of this type can be retrieved
+	Modified            edm.DateTime `json:"Modified,omitempty"`            // Last modified date
+	TypeCategory        edm.Int32    `json:"TypeCategory,omitempty"`        // ID of the document type category
+}
