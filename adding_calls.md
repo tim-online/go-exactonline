@@ -44,11 +44,12 @@ var types = [];
 $('#referencetable>tbody>tr:nth-child(n+2):visible').each(function(i, tr) {
    var name = $.trim($(tr).children('td:nth-child(2)').text());
    var type = $.trim($(tr).children('td:nth-child(6)').text());
-   var description = $.trim($(tr).children('td:nth-child(8), td:nth-child(9)').text());
+   var mandatory = $.trim($(tr).children('td:nth-child(3)').text()) == "True";
+   var description = $.trim($(tr).children('td:nth-child(7), td:nth-child(8), td:nth-child(9)').text());
    type = type.replace(/^Edm/, 'edm');
    type = type.replace(/^edm.Guid/, 'edm.GUID');
 
-   types.push(name + ' ' + type + ' ' + '`json:"' + name + '"`' + ' // ' + description);
+   types.push(name + ' ' + type + ' ' + '`json:"' + name + (mandatory ? '' : ',omitempty') + '"`' + ' // ' + description);
 });
 console.log(types.join("\n"));
 ```
