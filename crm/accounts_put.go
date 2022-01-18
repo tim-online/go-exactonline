@@ -34,7 +34,7 @@ type AccountsPutBody struct {
 	AddressLine1               edm.String   `json:"AddressLine1,omitempty"`               // Visit address first line
 	AddressLine2               edm.String   `json:"AddressLine2,omitempty"`               // Visit address second line
 	AddressLine3               edm.String   `json:"AddressLine3,omitempty"`               // Visit address third line
-	Blocked                    edm.Boolean  `json:"Blocked,omitempty"`                    // Indicates if the account is blocked
+	Blocked                    edm.Boolean  `json:"Blocked"`                              // Indicates if the account is blocked
 	BusinessType               edm.GUID     `json:"BusinessType,omitempty"`               // Reference to the business type of the account
 	CanDropShip                edm.Boolean  `json:"CanDropShip,omitempty"`                // Indicates the default for the possibility to drop ship when an item is linked to a supplier
 	ChamberOfCommerce          edm.String   `json:"ChamberOfCommerce,omitempty"`          // Chamber of commerce number
