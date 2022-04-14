@@ -12,6 +12,8 @@ import (
 	"github.com/tim-online/go-exactonline/generaljournalentry"
 	"github.com/tim-online/go-exactonline/hrm"
 	"github.com/tim-online/go-exactonline/logistics"
+	"github.com/tim-online/go-exactonline/project"
+	"github.com/tim-online/go-exactonline/purchaseorder"
 	"github.com/tim-online/go-exactonline/rest"
 	"github.com/tim-online/go-exactonline/salesentry"
 	"github.com/tim-online/go-exactonline/salesinvoice"
@@ -53,9 +55,9 @@ type Client struct {
 	// Manufacturing        *Manufacturing
 	// OpeningBalance       *OpeningBalance
 	// Payroll              *Payroll
-	// Project              *Project
+	Project *project.Service
 	// PurchaseEntry        *PurchaseEntry
-	// PurchaseOrder        *PurchaseOrder
+	PurchaseOrder *purchaseorder.Service
 	// Sales                *Sales
 	SalesEntry   *salesentry.Service
 	SalesInvoice *salesinvoice.Service
@@ -92,6 +94,8 @@ func NewClient(httpClient *http.Client, divisionID int) *Client {
 	c.GeneralJournalEntry = generaljournalentry.NewService(&c.Client)
 	c.HRM = hrm.NewService(&c.Client)
 	c.Logistics = logistics.NewService(&c.Client)
+	c.Project = project.NewService(&c.Client)
+	c.PurchaseOrder = purchaseorder.NewService(&c.Client)
 	c.SalesEntry = salesentry.NewService(&c.Client)
 	c.SalesInvoice = salesinvoice.NewService(&c.Client)
 	c.SalesOrder = salesorder.NewService(&c.Client)
