@@ -34,6 +34,15 @@ func MarshalJSON(obj interface{}) ([]byte, error) {
 		valueField := val.Field(i)
 		f := valueField.Interface()
 
+		if f == nil {
+			continue
+		}
+
+		switch reflect.TypeOf(f).Kind() {
+		case reflect.Ptr, reflect.Map, reflect.Array, reflect.Chan, reflect.Slice:
+			continue
+		}
+
 		if isempty, ok := f.(interface {
 			IsEmpty() bool
 		}); ok {
