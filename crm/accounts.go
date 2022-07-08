@@ -48,19 +48,21 @@ func (s *Service) NewAccountsGetParams() *AccountsGetParams {
 	selectFields, _ := utils.Fields(&Account{})
 	expandFields := []string{"BankAccounts"}
 	return &AccountsGetParams{
-		Select: odata.NewSelect(selectFields),
-		Expand: odata.NewExpand(expandFields),
-		Filter: odata.NewFilter(),
-		Top:    odata.NewTop(),
-		Skip:   odata.NewSkip(),
+		Select:  odata.NewSelect(selectFields),
+		Expand:  odata.NewExpand(expandFields),
+		Filter:  odata.NewFilter(),
+		Top:     odata.NewTop(),
+		Skip:    odata.NewSkip(),
+		OrderBy: odata.NewOrderBy(selectFields),
 	}
 }
 
 type AccountsGetParams struct {
 	// @TODO: check if this an OData struct or something
-	Select *odata.Select `schema:"$select,omitempty"`
-	Expand *odata.Expand `schema:"$expand,omitempty"`
-	Filter *odata.Filter `schema:"$filter,omitempty"`
-	Top    *odata.Top    `schema:"$top,omitempty"`
-	Skip   *odata.Skip   `schema:"$skip,omitempty"`
+	Select  *odata.Select  `schema:"$select,omitempty"`
+	Expand  *odata.Expand  `schema:"$expand,omitempty"`
+	Filter  *odata.Filter  `schema:"$filter,omitempty"`
+	Top     *odata.Top     `schema:"$top,omitempty"`
+	Skip    *odata.Skip    `schema:"$skip,omitempty"`
+	OrderBy *odata.OrderBy `schema:"$orderby,omitempty"`
 }
