@@ -22,6 +22,22 @@ func (g GUID) String() string {
 	return g.UUID.String()
 }
 
+func (g *GUID) UnmarshalJSON(text []byte) (err error) {
+	var s string
+	err = json.Unmarshal(text, &s)
+	if err != nil {
+		return err
+	}
+
+	if s == "" {
+		return nil
+	}
+
+	uuid, err := uuid.FromString(s)
+	*g = GUID{uuid}
+	return err
+}
+
 func (g GUID) MarshalJSON() ([]byte, error) {
 	if g.IsEmpty() {
 		return json.Marshal(nil)

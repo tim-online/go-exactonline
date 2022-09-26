@@ -67,3 +67,89 @@ type Project struct {
 }
 
 type NewProject Project
+
+type HourTypes []HourType
+
+type HourType struct {
+	ItemId          edm.GUID   `json:"ItemId,omitempty"`          // GUID id of the item that is linked to the project
+	ItemDescription edm.String `json:"ItemDescription,omitempty"` // Description of the item that is linked to the project
+}
+
+type TimeTransactions []TimeTransaction
+
+type TimeTransaction struct {
+	ID                      edm.GUID     `json:"ID,omitempty"`                      // Primary key
+	Account                 edm.GUID     `json:"Account,omitempty"`                 // Guid ID of account that is linked to the project
+	AccountName             edm.String   `json:"AccountName,omitempty"`             // Name of account that is linked to the project
+	Activity                edm.GUID     `json:"Activity,omitempty"`                // Guid ID of activity that is linked to project WBS (work breakdown structure)
+	ActivityDescription     edm.String   `json:"ActivityDescription,omitempty"`     // Name of activity that is linked to project WBS (work breakdown structure)
+	AmountFC                edm.Double   `json:"AmountFC,omitempty"`                // Calculated amount of the transaction based on (Quantity * PriceFC)
+	Attachment              edm.GUID     `json:"Attachment,omitempty"`              // Attachment linked to the transaction (not mandatory)
+	Created                 edm.DateTime `json:"Created,omitempty"`                 // Date and time the transaction was created
+	Creator                 edm.GUID     `json:"Creator,omitempty"`                 // The Guid ID of user that created the transaction
+	CreatorFullName         edm.String   `json:"CreatorFullName,omitempty"`         // The full name of the user that created the record
+	Currency                edm.String   `json:"Currency,omitempty"`                // Currency of amount FC
+	Date                    edm.DateTime `json:"Date,omitempty"`                    // Date and time the time transaction was done
+	Division                edm.Int32    `json:"Division,omitempty"`                // Division code
+	DivisionDescription     edm.String   `json:"DivisionDescription,omitempty"`     // Description of Division
+	Employee                edm.GUID     `json:"Employee,omitempty"`                // Guid ID of the employee that is linked to the time transaction
+	EndTime                 edm.DateTime `json:"EndTime,omitempty"`                 // End time of the time transaction
+	EntryNumber             edm.Int32    `json:"EntryNumber,omitempty"`             // Number that represents the grouping of time transactions
+	ErrorText               edm.String   `json:"ErrorText,omitempty"`               // (Only used by backgroundjobs) To determine which transaction has an error
+	HourStatus              edm.Int16    `json:"HourStatus,omitempty"`              // Status of the transaction: 1 = Draft, 2 = Rejected, 10 = Submitted, 11 = Failed on approval, 14 = Processing, 16 = Processing, 19 = Failed while undoing approval, 20 = Final
+	Item                    edm.GUID     `json:"Item"`                              // Item that is linked to the transaction, which provides the time information
+	ItemDescription         edm.String   `json:"ItemDescription,omitempty"`         // Description of the item that is linked to the transaction
+	ItemDivisable           edm.Boolean  `json:"ItemDivisable,omitempty"`           // Indicates if fractional quantities of the item can be used, for example quantity = 0.4
+	Modified                edm.DateTime `json:"Modified,omitempty"`                // The date and time transaction record was modified
+	Modifier                edm.GUID     `json:"Modifier,omitempty"`                // The Guid ID of the user that modified the records
+	ModifierFullName        edm.String   `json:"ModifierFullName,omitempty"`        // The full name of the user that modified the record
+	Notes                   edm.String   `json:"Notes,omitempty"`                   // Notes linked to the transaction for providing additional information (not mandatory)
+	PriceFC                 edm.Double   `json:"PriceFC,omitempty"`                 // For use in AmountFC (Quantiy * Price FC)
+	Project                 edm.GUID     `json:"Project"`                           // Guid ID of project that is linked to the transaction
+	ProjectAccount          edm.GUID     `json:"ProjectAccount,omitempty"`          // Project account ID that is linked to the transaction (not mandatory)
+	ProjectAccountCode      edm.String   `json:"ProjectAccountCode,omitempty"`      // Project account code that is linked to the transaction
+	ProjectAccountName      edm.String   `json:"ProjectAccountName,omitempty"`      // Project account name that is linked to the transaction
+	ProjectCode             edm.String   `json:"ProjectCode,omitempty"`             // Project code that is linked to the transaction
+	ProjectDescription      edm.String   `json:"ProjectDescription,omitempty"`      // Project description that is linked to the transaction
+	Quantity                edm.Double   `json:"Quantity"`                          // Quantity of the item that is linked to the transaction
+	StartTime               edm.DateTime `json:"StartTime,omitempty"`               // Start time of the time transaction
+	Subscription            edm.GUID     `json:"Subscription,omitempty"`            // Guid ID of subscription that is linked to the transaction
+	SubscriptionAccount     edm.GUID     `json:"SubscriptionAccount,omitempty"`     // Subscription account ID that is linked to the transaction, this is to identify the referenced subscription
+	SubscriptionAccountCode edm.String   `json:"SubscriptionAccountCode,omitempty"` // Subscription account code that is linked to the transaction
+	SubscriptionAccountName edm.String   `json:"SubscriptionAccountName,omitempty"` // Subscription account name that is linked to the transaction
+	SubscriptionDescription edm.String   `json:"SubscriptionDescription,omitempty"` // Subscription description that is linked to the transaction
+	SubscriptionNumber      edm.Int32    `json:"SubscriptionNumber,omitempty"`      // Subscription number that is linked to the transaction
+	Type                    edm.Int16    `json:"Type,omitempty"`                    // The type of transaction. E.g: 1 = Time, 2 = Cost
+}
+
+type NewTimeTransaction struct {
+	ID                  edm.GUID     `json:"ID,omitempty"`                  // Primary key
+	Account             edm.GUID     `json:"Account,omitempty"`             // Guid ID of account that is linked to the project
+	Activity            edm.GUID     `json:"Activity,omitempty"`            // Guid ID of activity that is linked to project WBS (work breakdown structure)
+	AmountFC            edm.Double   `json:"AmountFC,omitempty"`            // Calculated amount of the transaction based on (Quantity * PriceFC)
+	Attachment          edm.GUID     `json:"Attachment,omitempty"`          // Attachment linked to the transaction (not mandatory)
+	Currency            edm.String   `json:"Currency,omitempty"`            // Currency of amount FC
+	Date                edm.DateTime `json:"Date,omitempty"`                // Date and time the time transaction was done
+	Employee            edm.GUID     `json:"Employee,omitempty"`            // Guid ID of the employee that is linked to the time transaction
+	EndTime             edm.DateTime `json:"EndTime,omitempty"`             // End time of the time transaction
+	EntryNumber         edm.Int32    `json:"EntryNumber,omitempty"`         // Number that represents the grouping of time transactions
+	ErrorText           edm.String   `json:"ErrorText,omitempty"`           // (Only used by backgroundjobs) To determine which transaction has an error
+	HourStatus          edm.Int16    `json:"HourStatus,omitempty"`          // Status of the transaction: 1 = Draft, 2 = Rejected, 10 = Submitted, 11 = Failed on approval, 14 = Processing, 16 = Processing, 19 = Failed while undoing approval, 20 = Final
+	Item                edm.GUID     `json:"Item"`                          // Item that is linked to the transaction, which provides the time information
+	Notes               edm.String   `json:"Notes,omitempty"`               // Notes linked to the transaction for providing additional information (not mandatory)
+	Project             edm.GUID     `json:"Project"`                       // Guid ID of project that is linked to the transaction
+	Quantity            edm.Double   `json:"Quantity"`                      // Quantity of the item that is linked to the transaction
+	StartTime           edm.DateTime `json:"StartTime,omitempty"`           // Start time of the time transaction
+	Subscription        edm.GUID     `json:"Subscription,omitempty"`        // Guid ID of subscription that is linked to the transaction
+	SubscriptionAccount edm.GUID     `json:"SubscriptionAccount,omitempty"` // Subscription account ID that is linked to the transaction, this is to identify the referenced subscription
+}
+
+type TimeAndBillingItemDetails []TimeAndBillingItemDetail
+
+type TimeAndBillingItemDetail struct {
+}
+
+type ProjectRestrictionItems []ProjectRestrictionItem
+
+type ProjectRestrictionItem struct {
+}

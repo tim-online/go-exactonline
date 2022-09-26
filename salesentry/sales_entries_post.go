@@ -37,7 +37,10 @@ func (s *Service) NewSalesEntriesPostResponse() *SalesEntriesPostResponse {
 	return &SalesEntriesPostResponse{}
 }
 
-type SalesEntriesPostResponse struct{}
+type SalesEntriesPostResponse struct {
+	MetaData edm.MetaData `json:"__metadata"`
+	SalesEntry
+}
 
 type NewSalesEntry struct {
 	EntryID          edm.GUID     `json:"EntryID,omitempty"`     // The unique ID of the entry. Via this ID all transaction lines of a single entry can be retrieved

@@ -58,9 +58,10 @@ func (s *Service) NewProjectsGetParams() *ProjectsGetParams {
 
 type ProjectsGetParams struct {
 	// @TODO: check if this an OData struct or something
-	Select *odata.Select `schema:"$select,omitempty"`
-	Expand *odata.Expand `schema:"$expand,omitempty"`
-	Filter *odata.Filter `schema:"$filter,omitempty"`
-	Top    *odata.Top    `schema:"$top,omitempty"`
-	Skip   *odata.Skip   `schema:"$skip,omitempty"`
+	Select    *odata.Select `schema:"$select,omitempty"`
+	Expand    *odata.Expand `schema:"$expand,omitempty"`
+	Filter    *odata.Filter `schema:"$filter,omitempty"`
+	Top       *odata.Top    `schema:"$top,omitempty"`
+	Skip      *odata.Skip   `schema:"$skip,omitempty"`
+	SkipToken string        `schema:"$skiptoken,omitempty"`
 }

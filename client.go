@@ -12,9 +12,12 @@ import (
 	"github.com/tim-online/go-exactonline/generaljournalentry"
 	"github.com/tim-online/go-exactonline/hrm"
 	"github.com/tim-online/go-exactonline/logistics"
+	"github.com/tim-online/go-exactonline/payroll"
 	"github.com/tim-online/go-exactonline/project"
+	"github.com/tim-online/go-exactonline/purchaseentry"
 	"github.com/tim-online/go-exactonline/purchaseorder"
 	"github.com/tim-online/go-exactonline/rest"
+	"github.com/tim-online/go-exactonline/sales"
 	"github.com/tim-online/go-exactonline/salesentry"
 	"github.com/tim-online/go-exactonline/salesinvoice"
 	"github.com/tim-online/go-exactonline/salesorder"
@@ -54,14 +57,14 @@ type Client struct {
 	// Mailbox              *Mailbox
 	// Manufacturing        *Manufacturing
 	// OpeningBalance       *OpeningBalance
-	// Payroll              *Payroll
-	Project *project.Service
-	// PurchaseEntry        *PurchaseEntry
+	Payroll       *payroll.Service
+	Project       *project.Service
+	PurchaseEntry *purchaseentry.Service
 	PurchaseOrder *purchaseorder.Service
-	// Sales                *Sales
-	SalesEntry   *salesentry.Service
-	SalesInvoice *salesinvoice.Service
-	SalesOrder   *salesorder.Service
+	Sales         *sales.Service
+	SalesEntry    *salesentry.Service
+	SalesInvoice  *salesinvoice.Service
+	SalesOrder    *salesorder.Service
 	// Subscription         *Subscription
 	System *system.Service
 	// Users                *Users
@@ -94,8 +97,11 @@ func NewClient(httpClient *http.Client, divisionID int) *Client {
 	c.GeneralJournalEntry = generaljournalentry.NewService(&c.Client)
 	c.HRM = hrm.NewService(&c.Client)
 	c.Logistics = logistics.NewService(&c.Client)
+	c.Payroll = payroll.NewService(&c.Client)
 	c.Project = project.NewService(&c.Client)
+	c.PurchaseEntry = purchaseentry.NewService(&c.Client)
 	c.PurchaseOrder = purchaseorder.NewService(&c.Client)
+	c.Sales = sales.NewService(&c.Client)
 	c.SalesEntry = salesentry.NewService(&c.Client)
 	c.SalesInvoice = salesinvoice.NewService(&c.Client)
 	c.SalesOrder = salesorder.NewService(&c.Client)
