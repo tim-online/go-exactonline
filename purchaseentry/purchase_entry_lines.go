@@ -14,7 +14,7 @@ type NewPurchaseEntryLine struct {
 	CostCenter                 edm.String   `json:"CostCenter,omitempty"`                 // Reference to cost center
 	CostUnit                   edm.String   `json:"CostUnit,omitempty"`                   // Reference to cost unit
 	Description                edm.String   `json:"Description,omitempty"`                // Description
-	EntryID                    edm.GUID     `json:"EntryID"`                              // Reference to header of the purchase entry
+	EntryID                    edm.GUID     `json:"EntryID,omitempty"`                              // Reference to header of the purchase entry
 	From                       edm.DateTime `json:"From,omitempty"`                       // From date to identify the range for deferred costs. This is used in combination with the property 'To' that defines the end date
 	GLAccount                  edm.GUID     `json:"GLAccount"`                            // General ledger account
 	IntraStatArea              edm.String   `json:"IntraStatArea,omitempty"`              // IntraStat area (only relevant when IntraStat for purchase is enabled in the administration)

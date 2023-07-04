@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/tim-online/go-exactonline/edm"
+	"github.com/tim-online/go-exactonline/omitempty"
 )
 
 // POST
@@ -26,6 +27,10 @@ func (s *Service) PurchaseEntriesPost(body *PurchaseEntriesPostBody, ctx context
 }
 
 type PurchaseEntriesPostBody NewPurchaseEntry
+
+func (b PurchaseEntriesPostBody) MarshalJSON() ([]byte, error) {
+	return omitempty.MarshalJSON(b)
+}
 
 func (s *Service) NewPurchaseEntriesPostBody() *PurchaseEntriesPostBody {
 	return &PurchaseEntriesPostBody{
@@ -67,6 +72,10 @@ type NewPurchaseEntry struct {
 	Supplier              edm.GUID              `json:"Supplier"`                        // Reference to supplier (account)
 	VATAmountFC           edm.Double            `json:"VATAmountFC,omitempty"`           // Vat Amount in the currency of the transaction
 	YourRef               edm.String            `json:"YourRef,omitempty"`               // Your reference
+}
+
+func (e NewPurchaseEntry) MarshalJSON() ([]byte, error) {
+	return omitempty.MarshalJSON(e)
 }
 
 type PurchaseEntry struct {
@@ -114,6 +123,10 @@ type PurchaseEntry struct {
 	VATAmountDC                 edm.Double   `json:"VATAmountDC,omitempty"`                 // Vat Amount in the default currency of the company
 	VATAmountFC                 edm.Double   `json:"VATAmountFC,omitempty"`                 // Vat Amount in the currency of the transaction
 	YourRef                     edm.String   `json:"YourRef,omitempty"`                     // Your reference
+}
+
+func (e PurchaseEntry) MarshalJSON() ([]byte, error) {
+	return omitempty.MarshalJSON(e)
 }
 
 type PurchaseEntryLine struct {
@@ -166,4 +179,8 @@ type PurchaseEntryLine struct {
 	VATPercentage              edm.Double   `json:"VATPercentage,omitempty"`              // VAT percentage
 	WithholdingAmountDC        edm.Double   `json:"WithholdingAmountDC,omitempty"`        // Withholding tax amount for spanish legislation
 	WithholdingTax             edm.String   `json:"WithholdingTax,omitempty"`             // Withholding tax key for spanish legislation debugger eval code:12:9
+}
+
+func (l PurchaseEntryLine) MarshalJSON() ([]byte, error) {
+	return omitempty.MarshalJSON(l)
 }
