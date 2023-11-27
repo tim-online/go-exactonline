@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/tim-online/go-exactonline/edm"
 	"github.com/tim-online/go-exactonline/odata"
 	"github.com/tim-online/go-exactonline/utils"
 )
@@ -40,6 +41,7 @@ func (s *Service) NewGLAccountsGetResponse() *GLAccountsGetResponse {
 
 type GLAccountsGetResponse struct {
 	Results GLAccounts `json:"results"`
+	Next    edm.URL    `json:"__next"`
 }
 
 func (s *Service) NewGLAccountsGetParams() *GLAccountsGetParams {
@@ -54,8 +56,9 @@ func (s *Service) NewGLAccountsGetParams() *GLAccountsGetParams {
 
 type GLAccountsGetParams struct {
 	// @TODO: check if this an OData struct or something
-	Select *odata.Select `schema:"$select,omitempty"`
-	Filter *odata.Filter `schema:"$filter,omitempty"`
-	Top    *odata.Top    `schema:"$top,omitempty"`
-	Skip   *odata.Skip   `schema:"$skip,omitempty"`
+	Select    *odata.Select `schema:"$select,omitempty"`
+	Filter    *odata.Filter `schema:"$filter,omitempty"`
+	Top       *odata.Top    `schema:"$top,omitempty"`
+	Skip      *odata.Skip   `schema:"$skip,omitempty"`
+	SkipToken string        `schema:"$skiptoken,omitempty"`
 }
